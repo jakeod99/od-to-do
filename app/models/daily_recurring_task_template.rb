@@ -1,0 +1,2 @@
+class DailyRecurringTaskTemplate < RecurringTaskTemplate
+end

@@ -1,21 +1,29 @@
 class CreateTasks < ActiveRecord::Migration[8.0]
-  def change
+  def up
+    create_enum :task_status, [ "draft", "unstarted", "in progress", "completed", "failed", "skipped", "discarded" ]
+
     create_table :tasks, id: :uuid do |t|
-      t.string :status
+      t.enum :status, enum_type: :task_status, default: "draft", null: false
       t.string :title
       t.text :description
       t.datetime :firm_due
       t.datetime :suggested_due
-      t.integer :complexity
-      t.string :urgency
-      t.references :author, type: :uuid, null: false, foreign_key: { to_table: :users }
+      t.integer :complexity, default: 2, limit: 2
+      t.integer :urgency, default: 2, limit: 2
+      t.references :authorable, type: :uuid, null: false, polymorphic: true
       t.references :assignable, type: :uuid, null: true, polymorphic: true
       t.references :completed_by, type: :uuid, null: true, foreign_key: { to_table: :users }
       t.datetime :completed_at
-      t.references :recurring_task_template, type: :uuid, null: true, foreign_key: true
-      t.references :wave, type: :uuid, null: true, foreign_key: true
 
       t.timestamps
     end
+  end
+
+  def down
+    drop_table :tasks
+
+    execute <<-SQL
+      DROP TYPE task_status;
+    SQL
   end
 end

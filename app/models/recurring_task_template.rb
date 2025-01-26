@@ -1,10 +1,54 @@
 class RecurringTaskTemplate < ApplicationRecord
-  belongs_to :author, class_name: "User", foreign_key: "author_id"
   belongs_to :assignable, polymorphic: true, optional: true
+  belongs_to :author, class_name: "User", foreign_key: "author_id"
 
-  has_many :tasks
-  has_many :recurring_task_templates_categories
-  has_many :categories, through: :recurring_task_templates_categories
+  has_many :authored_tasks, class_name: "Task", foreign_key: "authorable_id", as: :authorable
+  has_many :category_recurring_task_template_links, dependent: :destroy
+  has_many :categories, through: :category_recurring_task_template_links
 
-  validates :urgency, inclusion: { in: Task::URGENCY_LEVELS }
+  STATUSES = [ "inactive", "active", "discarded" ].freeze
+
+  validates :urgency, inclusion: { in: Task::INTENSITY_LEVELS.keys }
+  validates :complexity, inclusion: { in: Task::INTENSITY_LEVELS.keys }
+  validates :status, inclusion: { in: STATUSES }
+
+  alias_method :assign=, :assignable=
+  alias_method :assigned_to, :assignable
+
+  def dates_in_range(start_date, end_date)
+    raise NotImplementedError
+  end
+
+  def days
+    super&.split(",") || []
+  end
+
+  def urgency=(intensity)
+    super(Task.clean_intensity_level_input(intensity))
+  end
+
+  def urgency_label
+    Task::INTENSITY_LEVELS[urgency]
+  end
+
+  def urgency_value
+    urgency
+  end
+
+  def complexity=(intensity)
+    super(Task.clean_intensity_level_input(intensity))
+  end
+
+  def complexity_label
+    Task::INTENSITY_LEVELS[complexity]
+  end
+
+  def complexity_value
+    complexity
+  end
+
+  def categories=(input)
+    new_input = (Array.wrap(input) << Category.find_by(name: "Regularly Recurring")).uniq
+    super(new_input)
+  end
 end

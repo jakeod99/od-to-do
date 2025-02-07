@@ -1,5 +1,6 @@
 class Wave < ApplicationRecord
-  has_many :tasks
+  has_many :task_wave_links, dependent: :destroy
+  has_many :tasks, through: :task_wave_links
 
   STATUSES = [ "waiting", "active", "completed" ].freeze
 

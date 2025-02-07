@@ -1,9 +1,14 @@
 class WavesController < ApplicationController
-  def index; end
+  def index
+    @waves = Wave.all
+  end
 
   def show; end
 
-  def new; end
+  def new
+    @wave = NewWaitingWaveCreator.call.content
+    @tasks = @wave.tasks
+  end
 
   def create; end
 

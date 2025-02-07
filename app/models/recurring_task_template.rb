@@ -59,7 +59,29 @@ class RecurringTaskTemplate < ApplicationRecord
     type.split(/(?=[A-Z])/).first
   end
 
+  def create_tasks(start_date, end_date)
+    create_arr = dates_in_range(start_date, end_date).map do |date|
+      task_create_hash(date)
+    end
+    Task.create!(create_arr)
+  end
+
   private
+
+  def task_create_hash(date)
+    {
+      status: :unstarted,
+      title: title,
+      description: description,
+      complexity: complexity,
+      urgency: urgency,
+      author: self
+    }.tap do |hash|
+      due_key = is_firm ? :firm_due : :suggested_due
+      hash[due_key] = date
+      hash[:assign] = assigned_to if assigned_to
+    end
+  end
 
   def set_categories
     self.categories = [] if self.categories.empty?

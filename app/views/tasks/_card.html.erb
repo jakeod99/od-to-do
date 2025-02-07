@@ -73,5 +73,9 @@
       </li>
     <% end %>
   </ul>
-  <%= render "common/card_footer", model: task, author_name: task.author.name %>
+  <%= render( 
+    "common/card_footer",
+    model: task,
+    author_name: task.author.is_a?(RecurringTaskTemplate) ? "Recurring Task Template" : task.author.name
+  )%>
 </div>

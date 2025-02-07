@@ -4,7 +4,7 @@ Basic weekly task management application for the O'Donnell house. Built to be de
 
 **Quick Disclaimer:**
 
-If you choose to fork this repo and build anything more substantial, there's a lot you will need to change - particulary with respect to user management. For example, since this app has almost no need for a "new user" flow, it simply seeds in the few people who will use it.
+If you choose to fork this repo and build anything more substantial, there's a lot you will need to change - particulary with respect to user management. For example, since this app has almost no need for a "new user" flow, it simply seeds in the few people who will use it. It is also entirely untested, so not exactly a shining example of good practice.
 
 ## Installation (MAYBE JUST MAKE THIS INSTALLATION ON `RaspberryPi` INSTRUCTIONS)
 

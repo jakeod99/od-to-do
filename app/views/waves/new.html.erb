@@ -1,0 +1,11 @@
+<% if Wave.current.present? %>
+  <p>No need to create a new wave, there is a current active wave already</p>
+  <p>
+    A feature of this app is that waves can only be generated and committed to 
+    once the last wave is completed. This ensures thoughtful commitments and 
+    allows rolling tasks from the previous wave.
+  </p>
+<% else %>
+  <p>Please gather input from all stakeholders before commiting to a new wave</p>
+  <p>Only admins can commit to a new wave</p>
+<% end %>

@@ -1,0 +1,12 @@
+<%
+  classes ||= ""
+  color ||= ""
+  style = color.empty? ? "" : "background-color: #{color};"
+%>
+
+<span
+  class="badge <%= classes %>"
+  style="<%= style %>"
+>
+  <%= content %>
+</span>

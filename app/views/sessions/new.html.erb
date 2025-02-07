@@ -1,11 +1,89 @@
 <%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
 <%= tag.div(flash[:notice], style: "color:green") if flash[:notice] %>
 
-<%= form_with url: session_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %><br>
-  <%= form.submit "Sign in" %>
-<% end %>
-<br>
+<%# content_for :head do %>
+  <%#= javascript_import_module_tag "helpers/dynamic_autofocus" %>
+<%# end %>
 
-<%= link_to "Forgot password?", new_password_path %>
+<% if session[:return_to_after_authenticating].present? %>
+  <div class="alert alert-danger text-center" role="alert">
+    You have to sign in to access that page
+  </div>
+<% end %>
+
+<h1 class="text-center pt-4 pb-3">Quick Sign In</h1>
+
+<div class="container pb-5">
+  <div class="row text-center">
+    <% @users.each do |user| %>
+      <% modal_id = "#{user.id}-sign-in-modal" %>
+      <div class="col">
+        <%= button_tag user.name, class: "btn btn-primary", data: { "bs-toggle" => "modal", "bs-target" => "##{modal_id}" } %>
+        <div class="modal fade" id="<%= modal_id %>" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5"><%= user.name %></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <%= form_with url: session_path do |form| %>
+                <div class="modal-body">
+                  <%= form.hidden_field :email_address, value: user.email_address %>
+                  <%= form.password_field(
+                    :password,
+                    required: true,
+                    autocomplete: "current-password",
+                    placeholder: "Password",
+                    maxlength: 72,
+                    size: 36
+                  ) %>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <%= form.submit "Sign in", class: "btn btn-primary" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<h3 class="text-center pt-5">The Long Way</h3> 
+
+<div class="container text-center">
+  <%= form_with url: session_path do |form| %>
+    <div class="row pt-1">
+      <div class="col">
+        <%= form.email_field(
+          :email_address,
+          required: true,
+          autocomplete: "username",
+          placeholder: "Enter your email address",
+          value: params[:email_address],
+          size: 36
+        ) %>
+      </div>
+    </div>
+    <div class="row pt-1">
+      <div class="col">
+        <%= form.password_field(
+          :password,
+          required: true,
+          autocomplete: "current-password",
+          placeholder: "Enter your password",
+          maxlength: 72,
+          size: 36
+        ) %>
+      </div>
+    </div>
+    <div class="row pt-1">
+      <div class="col">
+        <%= form.submit "Sign in", class: "btn btn-secondary" %>
+        <%= link_to "Forgot password?", new_password_path, class: "ps-1" %>
+      </div>
+    </div>
+  <% end %>
+</div>

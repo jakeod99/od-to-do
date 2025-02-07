@@ -1,0 +1,12 @@
+<%
+  bg_color_map = {
+    "Very Low"  => "#70B070",
+    "Low"       => "#90B070",
+    "Medium"    => "#B7B770",
+    "High"      => "#B09070",
+    "Very High" => "#B07070"
+  }
+  color = bg_color_map[intensity.titleize]
+%>
+
+<%= render "common/badge", color: color, content: intensity %>

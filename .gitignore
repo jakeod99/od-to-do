@@ -37,3 +37,7 @@
 !/app/assets/builds/.keep
 
 /node_modules
+
+/db/seeds/temp_inputs_for_testing.rb
+
+*.DS_Store

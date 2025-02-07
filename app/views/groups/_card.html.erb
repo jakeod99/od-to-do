@@ -1,0 +1,15 @@
+<div class="card" style="border-color: <%= group.color %>;">
+  <h4 class="card-header" style="background-color: <%= group.color %>; border-color: <%= group.color %>;">
+    <%= render "common/icon", icon: group.icon %>
+    <span class="ms-2"><%= group.name %></span>
+  </h4>
+  <div class="card-body" style="border-color: <%= group.color %>;">
+    <p class="card-text"><%= group.description %></p>
+    <ul>
+      <% group.users.each do |user| %>
+        <li><%= user.name %></li>
+      <% end %>
+    </ul>
+  </div>
+  <%= render "common/card_footer", model: group, border_color: group.color %>
+</div>

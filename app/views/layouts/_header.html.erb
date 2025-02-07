@@ -1,0 +1,64 @@
+<nav class="navbar py-0 border-bottom">
+  <div class="container-fluid">
+    <%= link_to root_path, class: "navbar-brand d-none d-sm-block me-0" do %>
+      <%= image_tag "logo.png"%>
+    <% end %>
+    <%= link_to root_path, class: "navbar-brand d-block d-sm-none me-0" do %>
+      <%= image_tag "small-logo.png" %>
+    <% end %>
+
+    <div class="nav-item">
+      <%= link_to root_path, class: "nav-link" do %>
+        <strong>Dashboard</strong>
+      <% end %>
+    </div>
+    <div class="nav-item">
+      <%= link_to tasks_path, class: "nav-link" do %>
+        <strong>Tasks</strong>
+      <% end %>
+    </div>
+    <div class="nav-item d-none d-sm-block">
+      <%= link_to waves_path, class: "nav-link" do %>
+        <strong>Waves</strong>
+      <% end %>
+    </div>
+    <div class="nav-item d-none d-md-block">
+      <%= link_to recurring_task_templates_path, class: "nav-link" do %>
+        <strong>Recurring</strong>
+      <% end %>
+    </div>
+    <div class="nav-item d-none d-md-block">
+      <%= link_to categories_path, class: "nav-link" do %>
+        <strong>Categories</strong>
+      <% end %>
+    </div>
+    <div class="nav-item d-none d-md-block">
+      <%= link_to groups_path, class: "nav-link" do %>
+        <strong>Groups</strong>
+      <% end %>
+    </div>
+
+    <div class="nav-item d-none d-sm-block">
+      <% if @current_user %>
+        <%= form_with url: session_path, method: :delete do |form| %>
+          <%= form.submit "Sign #{@current_user.name} Out", class: "btn btn-secondary", role: "button" %>
+        <% end %>
+      <% else %>
+        <%= link_to new_session_path, class: "btn btn-primary text-light", role: "button" do %>
+          Sign In
+        <% end %>
+      <% end %>
+    </div>
+    <div class="nav-item d-block d-sm-none">
+      <% if @current_user %>
+        <%= form_with url: session_path, method: :delete do |form| %>
+          <%= form.submit "Sign Out", class: "btn btn-secondary", role: "button" %>
+        <% end %>
+      <% else %>
+        <%= link_to new_session_path, class: "btn btn-primary text-light", role: "button" do %>
+          Sign In
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</nav>

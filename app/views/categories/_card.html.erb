@@ -1,0 +1,10 @@
+<div class="card" style="border-color: <%= category.color %>;">
+  <h4 class="card-header" style="background-color: <%= category.color %>; border-color: <%= category.color %>;">
+    <%= render "common/icon", icon: category.icon %>
+    <span class="ms-2"><%= category.name %></span>
+  </h4>
+  <div class="card-body" style="border-color: <%= category.color %>;">
+    <p class="card-text"><%= category.description %></p>
+  </div>
+  <%= render "common/card_footer", model: category, border_color: category.color %>
+</div>

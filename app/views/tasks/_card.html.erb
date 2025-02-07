@@ -1,0 +1,77 @@
+<%
+  is_recurring ||= false
+  status_color_map = {
+    "in progress" => "primary",
+    "completed" => "success",
+    "skipped" => "warning",
+    "failed" => "danger"
+  }
+  status_color = status_color_map[task.status] unless is_recurring
+  first_badge_class = "bg-secondary"
+  if status_color
+    border_class = "border-#{status_color}"
+    header_class = "#{border_class} bg-#{status_color}#{" text-dark" if status_color == "warning"}"
+    first_badge_class = "bg-#{status_color}#{" text-dark" if status_color == "warning"}"
+  end
+  first_badge_content = is_recurring ? task.short_type : task.status.titleize
+%>
+
+<div class="card <%= border_class %>">
+  <h4 class="card-header <%= header_class %>"><%= task.title %></h4>
+  <div class="card-body <%= border_class %>">
+    <%= render "common/badge", classes: "#{first_badge_class} mb-2", content: first_badge_content %>
+    <% task.categories.each do |category| %>
+      <%= render "common/badge", classes: "mb-2", color: category.color, content: category.name %>
+    <% end %>
+    <p class="card-text"><%= task.description %></p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item <%= border_class %>">
+      <p class="mb-0">
+        <span class="fw-bolder">Urgency:</span>
+        <%= render "common/intensity_badge", intensity: task.urgency_label %>
+      </p>
+    </li>      
+    <li class="list-group-item <%= border_class %>">
+      <p class="mb-0">
+        <span class="fw-bolder">Complexity:</span>
+        <%= render "common/intensity_badge", intensity: task.complexity_label %>
+      </p>
+    </li>
+    <li class="list-group-item <%= border_class %>">
+      <p class="mb-0">
+        <% if task.assigned_to %>
+          <span class="fw-bolder">Assigned To:</span>
+          <%= task.assigned_to.name %>
+        <% else %>
+          <%= link_to new_session_path, class: "btn btn-primary text-light py-0 px-1", role: "button" do %>
+            <%= render "common/icon", icon: "person-plus" %>
+            Assign To Me!
+          <% end %>
+        <% end %>
+      </p>
+    </li>
+    <% if task.respond_to? :completed_by %>
+      <li class="list-group-item <%= border_class %>">
+        <p class="mb-0">
+          <% if task.completed_by %>
+            <span class="fw-bolder">Completed By:</span>
+            <%= task.completed_by.name %>
+          <% else %>
+            <% if task.unstarted? %>
+              <%= link_to new_session_path, class: "btn btn-primary text-light py-0 px-1 me-1", role: "button" do %>
+                <%= render "common/icon", icon: "play-circle" %>
+                Start Me!
+              <% end %>
+            <% end %>
+            <%= link_to new_session_path, class: "btn btn-success text-light py-0 px-1", role: "button" do %>
+              <%= render "common/icon", icon: "check2-square" %>
+              Complete Me!
+            <% end %>
+          <% end %>
+        </p>
+      </li>
+    <% end %>
+  </ul>
+  <%= render "common/card_footer", model: task, author_name: task.author.name %>
+</div>

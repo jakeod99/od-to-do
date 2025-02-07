@@ -22,9 +22,10 @@ class Task < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
 
   alias_method :assign=, :assignable=
+  alias_method :assign_to=, :assignable=
   alias_method :assigned_to, :assignable
-  alias_method :author, :authorable
   alias_method :author=, :authorable=
+  alias_method :author, :authorable
 
   def self.intensity_level_value(term)
     INTENSITY_LEVELS.key(term.titleize)
@@ -39,7 +40,7 @@ class Task < ApplicationRecord
   end
 
   def urgency=(intensity)
-    self[:urgency] = clean_intensity_level_input(intensity)
+    self[:urgency] = Task.clean_intensity_level_input(intensity)
   end
 
   def urgency_label
@@ -51,7 +52,7 @@ class Task < ApplicationRecord
   end
 
   def complexity=(intensity)
-    self[:complexity] = clean_intensity_level_input(intensity)
+    self[:complexity] = Task.clean_intensity_level_input(intensity)
   end
 
   def complexity_label
@@ -60,5 +61,9 @@ class Task < ApplicationRecord
 
   def complexity_value
     complexity
+  end
+
+  def unstarted?
+    status == "unstarted"
   end
 end

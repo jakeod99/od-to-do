@@ -2,7 +2,9 @@
 
 Basic weekly task management application for the O'Donnell house. Built to be deployed on a Raspberry Pi that is port forwarding to allow access exclusively on Jake's home network.
 
-Quick discalimer: since this app has almost no need for a "new user" flow, it simply seeds in the few people who will use it.
+**Quick Disclaimer:**
+
+If you choose to fork this repo and build anything more substantial, there's a lot you will need to change - particulary with respect to user management. For example, since this app has almost no need for a "new user" flow, it simply seeds in the few people who will use it.
 
 ## Installation (MAYBE JUST MAKE THIS INSTALLATION ON `RaspberryPi` INSTRUCTIONS)
 

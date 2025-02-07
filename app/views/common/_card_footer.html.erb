@@ -1,0 +1,10 @@
+<%
+  border_color ||= ""
+  style = border_color.empty? ? "" : "border-color: #{border_color};"
+  author_name ||= ""
+  content = "Created#{" by #{author_name}" if author_name.present?} on #{model.created_at.strftime("%-m/%-d/%y")}"
+%>
+
+<div class="card-footer pt-0 pb-1 text-end" style="<%= style %>">
+  <small class="text-muted"><%= content %></small>
+</div>

@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="row">
+    <% categories.each do |category| %>
+      <div class="col-12 col-md-6 col-lg-4 col-xxl-3">
+        <div class="mb-4">
+          <%= render "categories/card", category: category %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

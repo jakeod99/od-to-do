@@ -25,9 +25,4 @@ class YearlyRecurringTaskTemplate < RecurringTaskTemplate
       end
     super(new_input)
   end
-
-  def categories=(input)
-    new_input = (Array.wrap(input) << Category.find_by(name: "Annual Events")).uniq
-    super(new_input)
-  end
 end

@@ -1,0 +1,8 @@
+<% unless @current_wave %>
+  <div class="alert alert-danger text-center" role="alert">
+    There is no current active wave!
+    <%= link_to root_path, class: "alert-link" do %><%# new_wave_path TODO %>
+      Generate and commit to a new one.
+    <% end %>
+  </div>
+<% end %>

@@ -1,4 +1,4 @@
-# THIS FOLDER CONTAINS SEED INFO SPECIFIC TO THE O'DONNELL HOUSE IMPLEMENTATION
+# THIS FILE CONTAINS SEED INFO SPECIFIC TO THE O'DONNELL HOUSE IMPLEMENTATION
 # IF YOU CHOOSE TO FORK THIS REPO FOR YOUR OWN TASK MANAGEMENT, REMOVE THIS OR REPLACE IT
 
 jake    = User.find_by(email_address: ENV["JAKE_SEED_EMAIL"])
@@ -240,6 +240,17 @@ MonthlyRecurringTaskTemplate.create!([
   },
   {
     status: "active",
+    title: "Hosting Plan",
+    description: "Decide on who to host next and create all necessary tasks to make it happen",
+    days: [ 1 ],
+    is_firm: false,
+    complexity: :low,
+    urgency: :low,
+    author: jake,
+    assign: parents
+  },
+  {
+    status: "active",
     title: "Jake's Haircut",
     description: "Cut Jake's hair (4 on sides, 7 on top)",
     days: [ 8 ],
@@ -264,14 +275,15 @@ MonthlyRecurringTaskTemplate.create!([
   },
   {
     status: "active",
-    title: "Hosting Plan",
-    description: "Decide on who to host next and create all necessary tasks to make it happen",
-    days: [ 1 ],
+    title: "Clean Ice Machine",
+    description: "Without regular cleaning, the pellet ice maker starts growing moldy. Check for specific growth areas to focus on, and otherwise generally clean the rest",
+    days: [ 22 ],
     is_firm: false,
-    complexity: :low,
-    urgency: :low,
+    complexity: :medium,
+    urgency: :medium,
     author: jake,
-    assign: parents
+    assign: audrey,
+    categories: [ housework ]
   }
 ])
 
@@ -281,6 +293,30 @@ MonthlyRecurringTaskTemplate.create!([
 ##########
 
 YearlyRecurringTaskTemplate.create!([
+  {
+    status: "active",
+    title: "Remove Leaves",
+    description: "Blow or rake leaves and dump them deep into the wooded area by the shed. Usually best scheduled for Saturday",
+    days: [ "1/4", "11/8", "11/15", "11/22", "11/29" ],
+    is_firm: false,
+    complexity: :high,
+    urgency: :medium,
+    author: jake,
+    assign: men,
+    categories: [ yardwork ]
+  },
+  {
+    status: "active",
+    title: "Boveda Cycle",
+    description: "Carefully replace the 2 spent Boveda packs with fresh ones (2x Size-60 72% packs). Try to keep the humidor organized.",
+    days: [ "1/10", "3/10", "5/10", "7/10", "9/10", "11/10" ],
+    is_firm: false,
+    complexity: :low,
+    urgency: :low,
+    author: jake,
+    assign: jake,
+    categories: [ housework ]
+  },
   {
     status: "active",
     title: "Take Down Christmas Lights",
@@ -307,6 +343,18 @@ YearlyRecurringTaskTemplate.create!([
   },
   {
     status: "active",
+    title: "Lightbulb Jubilee",
+    description: "Check every light fixture inside and outside the house, and replace any that are out",
+    days: [ "1/25", "5/25", "9/25" ],
+    is_firm: false,
+    complexity: :medium,
+    urgency: :low,
+    author: jake,
+    assign: parents,
+    categories: [ housework ]
+  },
+  {
+    status: "active",
     title: "Replace HVAC Air Filters",
     description: "Remove both old air filters and replace them with fresh ones. This keeps indoor air fresh, reduces the electric bill, and elongates the HVAC system lifespan",
     days: [ "2/5", "5/5", "9/5" ],
@@ -321,7 +369,31 @@ YearlyRecurringTaskTemplate.create!([
     status: "active",
     title: "Spread Mulch",
     description: "Remove weeds and and any gross old mulch build-ups, then spread new mulch",
-    days: [ "2/15" ],
+    days: [ "2/8" ],
+    is_firm: false,
+    complexity: :high,
+    urgency: :medium,
+    author: jake,
+    assign: men,
+    categories: [ yardwork ]
+  },
+  {
+    status: "active",
+    title: "Replace Fridge Water Filter",
+    description: "Remove both old fridge water filter and replace it with a fresh ones. This keeps drinking water fresh and elongates the water filtration system lifespan",
+    days: [ "2/12", "8/13" ],
+    is_firm: false,
+    complexity: :low,
+    urgency: :low,
+    author: jake,
+    assign: jake,
+    categories: [ housework ]
+  },
+  {
+    status: "active",
+    title: "Weed Whack",
+    description: "Weed whack the deep-growth areas around the edges (drainage pits, fence, house, electrical boxes, trees, hedges, etc.). Be sure to keep crisp edges along the road, driveway, walkway, shed, and fire pit. Usually best scheduled for Saturday",
+    days: [ "2/15", "4/5", "5/3", "6/7", "7/12", "8/23", "9/27", "10/25" ],
     is_firm: false,
     complexity: :high,
     urgency: :medium,
@@ -336,42 +408,6 @@ YearlyRecurringTaskTemplate.create!([
     days: [ "3/1" ],
     is_firm: false,
     complexity: :medium,
-    urgency: :medium,
-    author: jake,
-    assign: men,
-    categories: [ yardwork ]
-  },
-  {
-    status: "active",
-    title: "Mow",
-    description: "Mow whole yard at John Deere deck level 3 (no bagging attachment). Usually best scheduled for Saturday",
-    days: [ "3/29", "4/26", "5/3", "5/24", "5/31", "6/7", "6/21", "6/28", "7/12", "7/26", "8/9", "8/16", "8/23", "9/6", "9/20", "10/18" ],
-    is_firm: false,
-    complexity: :high,
-    urgency: :medium,
-    author: jake,
-    assign: men,
-    categories: [ yardwork ]
-  },
-  {
-    status: "active",
-    title: "Bag Mow",
-    description: "Bag mow whole yard at John Deere deck level 3. Usually best scheduled for Saturday",
-    days: [ "4/12", "5/10", "6/14", "7/19", "8/30", "10/4", "11/1" ],
-    is_firm: false,
-    complexity: :high,
-    urgency: :medium,
-    author: jake,
-    assign: men,
-    categories: [ yardwork ]
-  },
-  {
-    status: "active",
-    title: "Weed Whack",
-    description: "Weed whack the deep-growth areas around the edges (drainage pits, fence, house, electrical boxes, trees, hedges, etc.). Be sure to keep crisp edges along the road, driveway, walkway, shed, and fire pit. Usually best scheduled for Saturday",
-    days: [ "2/15", "4/5", "5/3", "6/7", "7/12", "8/23", "9/27", "10/25" ],
-    is_firm: false,
-    complexity: :high,
     urgency: :medium,
     author: jake,
     assign: men,
@@ -403,6 +439,18 @@ YearlyRecurringTaskTemplate.create!([
   },
   {
     status: "active",
+    title: "Prune Branches",
+    description: "Prune branches across the property, then cut any firewood-worthy chunks to size and store them to dry",
+    days: [ "3/19", "8/16" ],
+    is_firm: false,
+    complexity: :high,
+    urgency: :medium,
+    author: jake,
+    assign: jake,
+    categories: [ yardwork ]
+  },
+  {
+    status: "active",
     title: "Powerwash",
     description: "Powerwash the driveway, walkway, porch, house, shed, and anything else that needs to be powerwashed",
     days: [ "3/22" ],
@@ -411,6 +459,30 @@ YearlyRecurringTaskTemplate.create!([
     urgency: :medium,
     author: jake,
     assign: jake,
+    categories: [ yardwork ]
+  },
+  {
+    status: "active",
+    title: "Mow",
+    description: "Mow whole yard at John Deere deck level 3 (no bagging attachment). Usually best scheduled for Saturday",
+    days: [ "3/29", "4/26", "5/3", "5/24", "5/31", "6/7", "6/21", "6/28", "7/12", "7/26", "8/9", "8/16", "8/23", "9/6", "9/20", "10/18" ],
+    is_firm: false,
+    complexity: :high,
+    urgency: :medium,
+    author: jake,
+    assign: men,
+    categories: [ yardwork ]
+  },
+  {
+    status: "active",
+    title: "Bag Mow",
+    description: "Bag mow whole yard at John Deere deck level 3. Usually best scheduled for Saturday",
+    days: [ "4/12", "5/10", "6/14", "7/19", "8/30", "10/4", "11/1" ],
+    is_firm: false,
+    complexity: :high,
+    urgency: :medium,
+    author: jake,
+    assign: men,
     categories: [ yardwork ]
   },
   {
@@ -435,6 +507,18 @@ YearlyRecurringTaskTemplate.create!([
     urgency: :medium,
     author: jake,
     assign: jake,
+    categories: [ yardwork ]
+  },
+  {
+    status: "active",
+    title: "Trim Hedges",
+    description: "Trim Hedges across the property",
+    days: [ "4/16", "10/15" ],
+    is_firm: false,
+    complexity: :high,
+    urgency: :medium,
+    author: jake,
+    assign: men,
     categories: [ yardwork ]
   },
   {
@@ -523,18 +607,6 @@ YearlyRecurringTaskTemplate.create!([
   },
   {
     status: "active",
-    title: "Remove Leaves",
-    description: "Blow or rake leaves and dump them deep into the wooded area by the shed. Usually best scheduled for Saturday",
-    days: [ "1/4", "11/8", "11/15", "11/22", "11/29" ],
-    is_firm: false,
-    complexity: :high,
-    urgency: :medium,
-    author: jake,
-    assign: men,
-    categories: [ yardwork ]
-  },
-  {
-    status: "active",
     title: "Clear Gutters",
     description: "Clear the gutters, or hire someone to do it so you don't break your neck",
     days: [ "11/19" ],
@@ -555,30 +627,6 @@ YearlyRecurringTaskTemplate.create!([
     urgency: :medium,
     author: jake,
     assign: jake,
-    categories: [ yardwork ]
-  },
-  {
-    status: "active",
-    title: "Prune Branches",
-    description: "Prune branches across the property, then cut any firewood-worthy chunks to size and store them to dry",
-    days: [ "3/19", "8/16" ],
-    is_firm: false,
-    complexity: :high,
-    urgency: :medium,
-    author: jake,
-    assign: jake,
-    categories: [ yardwork ]
-  },
-  {
-    status: "active",
-    title: "Trim Hedges",
-    description: "Trim Hedges across the property",
-    days: [ "4/16", "10/15" ],
-    is_firm: false,
-    complexity: :high,
-    urgency: :medium,
-    author: jake,
-    assign: men,
     categories: [ yardwork ]
   }
 ])

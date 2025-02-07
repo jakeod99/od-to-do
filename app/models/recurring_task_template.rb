@@ -13,7 +13,10 @@ class RecurringTaskTemplate < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
 
   alias_method :assign=, :assignable=
+  alias_method :assign_to=, :assignable=
   alias_method :assigned_to, :assignable
+
+  before_create :set_categories
 
   def dates_in_range(start_date, end_date)
     raise NotImplementedError
@@ -48,7 +51,17 @@ class RecurringTaskTemplate < ApplicationRecord
   end
 
   def categories=(input)
-    new_input = (Array.wrap(input) << Category.find_by(name: "Regularly Recurring")).uniq
+    new_input = (Array.wrap(input) << Category.find_by(name: "Recurring")).uniq
     super(new_input)
+  end
+
+  def short_type
+    type.split(/(?=[A-Z])/).first
+  end
+
+  private
+
+  def set_categories
+    self.categories = [] if self.categories.empty?
   end
 end

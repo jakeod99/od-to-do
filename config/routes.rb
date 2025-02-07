@@ -13,4 +13,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "dashboard#index"
+  resources :tasks
+  resources :waves
+  resources :recurring_task_templates
+  resources :categories
+  resources :groups
 end

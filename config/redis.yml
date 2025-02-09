@@ -1,0 +1,8 @@
+development:
+  url: <%= ENV.fetch("DEVELOPMENT_REDIS_URL", "redis://localhost:6379/0") %>
+
+test:
+  url: <%= ENV.fetch("TEST_REDIS_URL", "redis://localhost:6379/0") %>
+
+production:
+  url: <%= ENV.fetch("PRODUCTION_REDIS_URL", "redis://localhost:6379/0") %>

@@ -8,6 +8,22 @@ If you choose to fork this repo and build anything more substantial, there's a l
 
 ## Installation (MAYBE JUST MAKE THIS INSTALLATION ON `RaspberryPi` INSTRUCTIONS)
 
+bundle gems
+
+    bundle install
+
+start redis
+
+    brew install redis
+    brew services start redis
+
+start sidekiq
+
+    bundle exec sidekiq -C config/sidekiq.yml
+
+start rails in prod mode
+
+
 ### Set Environment Variables
 
 If you are implementing this for the O'Donnell household, `db/seeds/od_admins.rb` expects `dotenv` to load environment variables `JAKE_SEED_PWD` and `AUDREY_SEED_PWD`. Create a `.env` file at the project root and define those variables.

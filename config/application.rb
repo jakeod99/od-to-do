@@ -26,5 +26,13 @@ module OdToDo
 
     config.time_zone = 'Eastern Time (US & Canada)'
     config.active_record.default_timezone = :local
+
+    config.active_job.queue_adapter = :sidekiq
+
+    config.cache_store = :redis_cache_store, {
+      url: ENV.fetch("#{Rails.env.upcase}_REDIS_URL", "redis://localhost:6379/0"),
+      pool_size: 5,
+      pool_timeout: 5
+    }
   end
 end

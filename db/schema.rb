@@ -158,5 +158,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_212944) do
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "users", column: "completed_by_id"
   add_foreign_key "tasks_waves", "tasks"
-  add_foreign_key "tasks_waves", "waves", column: "wave_id"
+  add_foreign_key "tasks_waves", "waves"
 end

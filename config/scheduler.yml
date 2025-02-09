@@ -1,0 +1,5 @@
+wave_end:
+  cron: '0 * * * *'  # every minute to test sidekiq config
+  class: WaveEndJob
+  queue: default
+  description: "Check if current wave has ended, then handle updates and rollover if it has"

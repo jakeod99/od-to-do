@@ -4,7 +4,17 @@ class Wave < ApplicationRecord
 
   STATUSES = [ "waiting", "active", "completed" ].freeze
 
+  STATUSES.each do |s|
+    define_method "#{s}?" do
+      status == s
+    end
+  end
+
   def self.current
-    Wave.find_by(status: "active")
+    find_by(status: "active")
+  end
+
+  def self.previous
+    where(status: "completed").order(:end_at).limit(1)
   end
 end

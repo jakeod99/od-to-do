@@ -1,11 +1,9 @@
-<% is_recurring ||= false %>
-
 <div class="container">
   <div class="row">
     <% tasks.each do |task| %>
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="mb-4">
-          <%= render "tasks/card", task: task, is_recurring: is_recurring %>
+          <%= render "tasks/card", task: task %>
         </div>
       </div>
     <% end %>

@@ -12,13 +12,13 @@ class TasksController < ApplicationController
   end
 
   def create
-    Task.create! task_params
+    Task.create task_params
   end
 
   def edit; end
 
   def update
-    Task.update_attributes! task_params
+    Task.update_attributes task_params
   end
 
   def destroy

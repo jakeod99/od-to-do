@@ -6,11 +6,13 @@ class WavesController < ApplicationController
   def show; end
 
   def new
-    @wave = NewWaitingWaveCreator.call.content
-    @tasks = @wave.tasks
+    @wave = Wave.current
+    @tasks = @wave&.tasks
   end
 
-  def create; end
+  def create
+    NewWaitingWaveCreator.call
+  end
 
   def edit; end
 

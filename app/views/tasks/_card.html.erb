@@ -1,5 +1,5 @@
 <%
-  is_recurring ||= false
+  is_recurring = task.is_a? RecurringTaskTemplate
   status_color_map = {
     "in progress" => "primary",
     "completed" => "success",
@@ -14,6 +14,7 @@
     first_badge_class = "bg-#{status_color}#{" text-dark" if status_color == "warning"}"
   end
   first_badge_content = is_recurring ? task.short_type : task.status.titleize
+  wave = task.waves.active.first unless is_recurring
 %>
 
 <div class="card <%= border_class %>">
@@ -26,6 +27,35 @@
     <p class="card-text"><%= task.description %></p>
   </div>
   <ul class="list-group list-group-flush">
+    <li class="list-group-item <%= border_class %>">
+      <p class="mb-0">
+        <% if is_recurring %>
+          <span class="fw-bolder">Days:</span>
+          <%= task.display_days %>
+        <% else %>
+          <% if task.firm_due || task.suggested_due %>
+            <% if task.firm_due %>
+              <span class="fw-bolder <%= "text-danger" unless task.completed? %>">Firm Due:</span>
+              <%= task.firm_due.strftime("%-m/%-d/%y") %>
+            <% end %>
+            <% if task.suggested_due %>
+              <% if task.firm_due %>
+                <br>
+              <% end %>
+              <span class="fw-bolder text-warning">Suggested Due:</span>
+              <%= task.suggested_due.strftime("%-m/%-d/%y") %>
+            <% end %>
+          <% else %>
+            <% if wave.present? %>
+              <span class="fw-bolder">Wave End:</span>
+              <%= wave.end_date.strftime("%-m/%-d/%y") %>
+            <% else %>
+              <small class="fst-italic">No Defined Due Date</small>
+            <% end %>
+          <% end %>
+        <% end %>
+      </p>
+    </li>
     <li class="list-group-item <%= border_class %>">
       <p class="mb-0">
         <span class="fw-bolder">Urgency:</span>

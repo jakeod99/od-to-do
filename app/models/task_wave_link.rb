@@ -4,5 +4,14 @@ class TaskWaveLink < ApplicationRecord
   belongs_to :task
   belongs_to :wave
 
-  STATUS = [ "planned", "rolled", "completed", "failed", "skipped", "discarded" ].freeze
+  STATUSES = [ "planned", "rolled", "completed", "foresaken" ].freeze
+
+  STATUSES.each do |s|
+    define_singleton_method s do
+      where(status: s)
+    end
+    define_method "#{s}?" do
+      status == s
+    end
+  end
 end

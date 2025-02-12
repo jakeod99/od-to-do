@@ -19,7 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_212944) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "recurring_task_template_status", ["draft", "inactive", "active", "discarded"]
   create_enum "task_status", ["draft", "unstarted", "in progress", "completed", "failed", "skipped", "discarded"]
-  create_enum "tasks_waves_status", ["planned", "rolled", "completed", "failed", "skipped", "discarded"]
+  create_enum "tasks_waves_status", ["planned", "rolled", "completed", "foresaken"]
   create_enum "wave_status", ["waiting", "active", "completed"]
 
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

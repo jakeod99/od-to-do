@@ -1,7 +1,7 @@
 class ServiceResponse
-  attr_reader :status, :content
+  STATUSES = [ :success, :failure ].freeze
 
-  STATUSES = [ :success, :failure ]
+  attr_reader :status, :content
 
   def initialize(status:, content: nil)
     unless STATUSES.include? status

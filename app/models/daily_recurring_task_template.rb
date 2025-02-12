@@ -5,4 +5,8 @@ class DailyRecurringTaskTemplate < RecurringTaskTemplate
   def dates_in_range(start_date, end_date)
     (start_date..end_date).to_a
   end
+
+  def display_days
+    "Every Day"
+  end
 end

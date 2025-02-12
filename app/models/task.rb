@@ -17,6 +17,15 @@ class Task < ApplicationRecord
   }.freeze
   STATUSES = [ "draft", "unstarted", "in progress", "completed", "failed", "skipped", "discarded" ].freeze
 
+  STATUSES.each do |s|
+    define_singleton_method s do
+      where(status: s)
+    end
+    define_method "#{s}?" do
+      status == s
+    end
+  end
+
   validates :urgency, inclusion: { in: INTENSITY_LEVELS.keys }
   validates :complexity, inclusion: { in: INTENSITY_LEVELS.keys }
   validates :status, inclusion: { in: STATUSES }
@@ -26,6 +35,8 @@ class Task < ApplicationRecord
   alias_method :assigned_to, :assignable
   alias_method :author=, :authorable=
   alias_method :author, :authorable
+
+  before_save :update_wave_link_status, if: -> { status_changed? }
 
   def self.intensity_level_value(term)
     INTENSITY_LEVELS.key(term.titleize)
@@ -63,7 +74,12 @@ class Task < ApplicationRecord
     complexity
   end
 
-  def unstarted?
-    status == "unstarted"
+  private
+
+  def update_wave_link_status
+    if [ "failed" ].include? status
+      active_wave = waves.active.first
+      task_wave_links.where(wave: active_wave).update_all(status: "failed")
+    end
   end
 end

@@ -8,6 +8,15 @@ class RecurringTaskTemplate < ApplicationRecord
 
   STATUSES = [ "inactive", "active", "discarded" ].freeze
 
+  STATUSES.each do |s|
+    define_singleton_method s do
+      where(status: s)
+    end
+    define_method "#{s}?" do
+      status == s
+    end
+  end
+
   validates :urgency, inclusion: { in: Task::INTENSITY_LEVELS.keys }
   validates :complexity, inclusion: { in: Task::INTENSITY_LEVELS.keys }
   validates :status, inclusion: { in: STATUSES }
@@ -24,6 +33,10 @@ class RecurringTaskTemplate < ApplicationRecord
 
   def days
     super&.split(",") || []
+  end
+
+  def display_days
+    days.join(", ")
   end
 
   def urgency=(intensity)

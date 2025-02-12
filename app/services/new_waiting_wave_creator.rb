@@ -8,13 +8,17 @@ class NewWaitingWaveCreator < ApplicationService
   end
 
   def call
-    return failure unless valid?
+    return failure message: "invalid params #{@start_date} - #{@end_date}" unless valid?
 
-    ActiveRecord::Base.transaction do
-      create_waiting_wave
-      create_all_relevant_recurring_tasks
+    begin
+      ActiveRecord::Base.transaction do
+        create_waiting_wave
+        create_all_relevant_recurring_tasks
+      end
+    rescue ActiveRecord::Rollback => e
+      return failure message: "transaction block rollback '#{e.message}'"
     end
-    success @waiting_wave
+    success content: @waiting_wave
   end
 
   private
@@ -48,7 +52,7 @@ class NewWaitingWaveCreator < ApplicationService
   end
 
   def create_all_relevant_recurring_tasks # much room for performance optimization!
-    RecurringTaskTemplate.all.each do |template|
+    RecurringTaskTemplate.active.each do |template|
       @waiting_wave.tasks << template.create_tasks(@start_date, @end_date)
     end
   end

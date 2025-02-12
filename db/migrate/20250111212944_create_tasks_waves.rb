@@ -1,6 +1,6 @@
 class CreateTasksWaves < ActiveRecord::Migration[8.0]
   def up
-    create_enum :tasks_waves_status, [ "planned", "rolled", "completed", "failed", "skipped", "discarded" ]
+    create_enum :tasks_waves_status, [ "planned", "rolled", "completed", "foresaken" ]
 
     create_table :tasks_waves do |t|
       t.references :task, type: :uuid, null: false, foreign_key: true

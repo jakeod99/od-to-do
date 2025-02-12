@@ -3,8 +3,12 @@
 // #4f5e6f - D Gray
 // #787f87 - Checkmark Gray
 
-$primary: #107fba;
-$seconday: #787f87;
+$primary: #107FBA;
+$secondary: #787F87;
+$success: #10BA10; // #10BA7F?
+$danger: #BA1010;
+$warning: #E0E000;
+$info: #10BABA;
 
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';

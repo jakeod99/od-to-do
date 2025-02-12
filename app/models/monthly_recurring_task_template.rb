@@ -14,4 +14,8 @@ class MonthlyRecurringTaskTemplate < RecurringTaskTemplate
   def days=(input)
     super(input.is_a?(Array) ? input.join(",") : input)
   end
+
+  def display_days
+    days.map(&:ordinalize).join(", ")
+  end
 end

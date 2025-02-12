@@ -41,7 +41,7 @@
     <div class="nav-item d-none d-sm-block">
       <% if @current_user %>
         <%= form_with url: session_path, method: :delete do |form| %>
-          <%= form.submit "Sign #{@current_user.name} Out", class: "btn btn-secondary", role: "button" %>
+          <%= form.submit "Sign #{@current_user.name} Out", class: "btn btn-secondary text-light", role: "button" %>
         <% end %>
       <% else %>
         <%= link_to new_session_path, class: "btn btn-primary text-light", role: "button" do %>
@@ -52,7 +52,7 @@
     <div class="nav-item d-block d-sm-none">
       <% if @current_user %>
         <%= form_with url: session_path, method: :delete do |form| %>
-          <%= form.submit "Sign Out", class: "btn btn-secondary", role: "button" %>
+          <%= form.submit "Sign Out", class: "btn btn-secondary text-light", role: "button" %>
         <% end %>
       <% else %>
         <%= link_to new_session_path, class: "btn btn-primary text-light", role: "button" do %>

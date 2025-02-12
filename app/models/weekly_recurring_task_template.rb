@@ -22,6 +22,10 @@ class WeeklyRecurringTaskTemplate < RecurringTaskTemplate
     super(new_input)
   end
 
+  def display_days
+    days.map(&:titleize).join(", ")
+  end
+
   private
 
   WEEKDAY_MAP = {

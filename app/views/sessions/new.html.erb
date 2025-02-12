@@ -18,13 +18,19 @@
     <% @users.each do |user| %>
       <% modal_id = "#{user.id}-sign-in-modal" %>
       <div class="col">
-        <%= button_tag user.name, class: "btn btn-primary", data: { "bs-toggle" => "modal", "bs-target" => "##{modal_id}" } %>
+        <%= 
+          button_tag(
+            user.name,
+            class: "btn btn-primary text-light",
+            data: { "bs-toggle" => "modal", "bs-target" => "##{modal_id}" }
+          )
+        %>
         <div class="modal fade" id="<%= modal_id %>" tabindex="-1">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <h1 class="modal-title fs-5"><%= user.name %></h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
               </div>
               <%= form_with url: session_path do |form| %>
                 <div class="modal-body">
@@ -39,8 +45,10 @@
                   ) %>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <%= form.submit "Sign in", class: "btn btn-primary" %>
+                  <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">
+                    Close
+                  </button>
+                  <%= form.submit "Sign in", class: "btn btn-primary text-light" %>
                 </div>
               <% end %>
             </div>
@@ -81,7 +89,7 @@
     </div>
     <div class="row pt-1">
       <div class="col">
-        <%= form.submit "Sign in", class: "btn btn-secondary" %>
+        <%= form.submit "Sign in", class: "btn btn-secondary text-light" %>
         <%= link_to "Forgot password?", new_password_path, class: "ps-1" %>
       </div>
     </div>

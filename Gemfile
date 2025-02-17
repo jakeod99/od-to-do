@@ -44,7 +44,7 @@ gem "thruster", require: false
 
 gem "dotenv-rails", "~> 3.1", ">= 3.1.7"
 
-gem "sidekiq", "~> 7.3.8"
+gem "sidekiq", "~> 7.3.9"
 
 gem "sidekiq-scheduler", "~> 5.0.6"
 

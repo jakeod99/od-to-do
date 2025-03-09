@@ -1,11 +1,44 @@
-<% if Wave.current.present? %>
-  <p>No need to create a new wave, there is a current active wave already</p>
-  <p>
-    A feature of this app is that waves can only be generated and committed to 
-    once the last wave is completed. This ensures thoughtful commitments and 
-    allows rolling tasks from the previous wave.
-  </p>
-<% else %>
-  <p>Please gather input from all stakeholders before commiting to a new wave</p>
-  <p>Only admins can commit to a new wave</p>
-<% end %>
+<h1 class="text-center pt-5 pb-4">
+  <%= render "common/icon", icon: "tsunami" %>
+  Generate a New Wave!
+  <%= render "common/icon", icon: "tsunami" %>
+</h1>
+<div class="row justify-content-center pb-3">
+  <div class="col-6">
+    <p class="text-center">
+      When you generate a new wave, it will create tasks based on the current active
+      <%= link_to recurring_task_templates_path, class: "link-primary d-inline-block" do %>
+        Recurring Task Templates
+      <% end %>
+    </p>
+    <p class="text-center">
+      So before generating, be confident that all templates are in the desired state
+    </p>
+  </div>
+</div>
+<div class="row justify-content-center pb-3">
+  <div class="col-auto">
+    <div class="alert alert-warning text-center" role="alert">
+      <%= render "common/icon", icon: "exclamation-diamond" %>
+      Once a wave is generated, there is no going back!
+      <%= render "common/icon", icon: "exclamation-diamond" %>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-auto">
+    <%= 
+      button_to(
+        waves_path,
+        method: :post,
+        class: "btn btn-primary text-light",
+        role: "button"
+      ) do
+    %>
+      <%= render "common/icon", icon: "tsunami" %>
+      Generate Wave!
+      <%= render "common/icon", icon: "tsunami" %>
+    <% end %>
+  </div>
+</div>
+

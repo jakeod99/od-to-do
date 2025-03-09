@@ -40,7 +40,7 @@ class NewWaitingWaveCreator < ApplicationService
   end
 
   def other_eligible_waves?
-    Wave.where(status: [ "waiting", "active" ]).count != 0
+    Wave.current
   end
 
   def create_waiting_wave

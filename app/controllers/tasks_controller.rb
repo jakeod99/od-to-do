@@ -7,40 +7,34 @@ class TasksController < ApplicationController
     @task = Task.find params[:id]
   end
 
-  def new
-    
+  def new # once past MVP, improve performance
+    @assignables = User.all + Group.all
+    @categories = Category.custom
+    @intensity_levels = Task::INTENSITY_LEVELS
   end
 
   def create
-    Task.create task_params
   end
 
   def edit; end
 
-  def update
-    Task.update_attributes task_params
-  end
+  def update; end
 
-  def destroy
-    Task.destroy params[:id]
-  end
+  def destroy; end
 
   private
 
   def task_params
-    params.require(:task).permit(
+    params.permit(
       :title,
       :description,
-      :firm_due,
-      :suggested_due,
       :complexity,
       :urgency,
-      :authorable_id,
-      :authorable_type,
-      :assignable_id,
-      :assignable_type,
-      :completed_by_id,
-      :completed_at
+      :firm_due,
+      :suggested_due,
+      :assign,
+      :categories,
+      :wave
     )
   end
 end

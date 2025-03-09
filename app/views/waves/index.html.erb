@@ -1,6 +1,6 @@
-<h1>Waves Index Page</h1>
+<h1>Waves</h1>
 <li>
   <% @waves.each do |wave| %>
-    <ul><%= wave.inspect %></ul>
+    <ul><%= link_to @wave.display_range, @wave %></ul>
   <% end %>
 </li>

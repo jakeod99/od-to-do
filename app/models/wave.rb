@@ -19,19 +19,42 @@ class Wave < ApplicationRecord
     end
   end
 
-  before_save :update_wave_link_status, if: -> { status_changed? }
+  before_save :update_task_link_statuses, if: -> { status_changed? }
 
   def self.current
-    find_by(status: "active")
+    find_by(status: [ "waiting", "active" ])
   end
 
   def self.previous
     where(status: "completed").order(:end_at).limit(1)
   end
 
+  def complete!
+    self[:status] = "completed"
+  end
+
+  def activate!
+    self[:status] = "active"
+  end
+
+  def fully_in_current_year?
+    [ start_at.year, end_at.year ].include? DateTime.now.year
+  end
+
+  def display_range
+    date_display_format = "%A, %B %-d#{", %Y" unless fully_in_current_year? }"
+    start_display = start_at.strftime(date_display_format)
+    end_display = end_at.strftime(date_display_format)
+    "From #{start_display}, through #{end_display}."
+  end
+
   private
 
-  def update_wave_link_status
-    task_wave_links.planned.update_all(status: "rolled") if status == "completed"
+  def update_task_link_statuses
+    if status == "completed"
+      task_wave_links.planned.update_all(status: "rolled")
+    elsif status == "active"
+      task_wave_links.update_all(status: "planned", in_initial_commitment: true)
+    end
   end
 end

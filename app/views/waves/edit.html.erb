@@ -1,0 +1,24 @@
+<h1 class="text-center pt-5 pb-1">
+  <%= render "common/icon", icon: "tsunami" %>
+  Finalize New Wave!
+  <%= render "common/icon", icon: "tsunami" %>
+</h1>
+<p class="text-center"><%= @current_wave.display_range %></p>
+<div class="row justify-content-center">
+  <div class="col-auto">
+    <%= 
+      button_to(
+        waves_path(@current_wave),
+        method: :patch,
+        class: "btn btn-primary text-light",
+        role: "button"
+      ) do
+    %>
+      <%= render "common/icon", icon: "tsunami" %>
+      Commit to This Wave!
+      <%= render "common/icon", icon: "tsunami" %>
+    <% end %>
+  </div>
+</div>
+<h2 class="text-center pt-5 pb-3">This Wave's Tasks</h2>
+<%= render "tasks/all", tasks: @current_wave.tasks %>

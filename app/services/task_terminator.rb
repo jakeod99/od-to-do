@@ -8,7 +8,7 @@ class TaskTerminator < ApplicationService
         fail_tasks
       end
     rescue ActiveRecord::Rollback => e
-      return failure message: "transaction block rollback '#{e.message}'"
+      return failure message: "Transaction block rollback '#{e.message}'"
     end
     success content: @tasks
   end
@@ -20,6 +20,6 @@ class TaskTerminator < ApplicationService
   end
 
   def tasks_to_terminate
-    Task.where(firm_due: ..(Date.today), status: [ "unplanned", "in progress" ])
+    Task.where(firm_due: ..(Date.yesterday), status: [ "unstarted", "in progress" ])
   end
 end

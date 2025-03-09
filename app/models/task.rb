@@ -18,7 +18,7 @@ class Task < ApplicationRecord
   STATUSES = [ "draft", "unstarted", "in progress", "completed", "failed", "skipped", "discarded" ].freeze
 
   STATUSES.each do |s|
-    define_singleton_method s do
+    define_singleton_method s.to_sym do
       where(status: s)
     end
     define_method "#{s}?" do
@@ -79,7 +79,7 @@ class Task < ApplicationRecord
   def update_wave_link_status
     if [ "failed" ].include? status
       active_wave = waves.active.first
-      task_wave_links.where(wave: active_wave).update_all(status: "failed")
+      task_wave_links.where(wave: active_wave).update_all(status: "foresaken")
     end
   end
 end

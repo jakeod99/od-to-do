@@ -48,7 +48,7 @@ gem "sidekiq", "~> 7.3.8"
 
 gem "sidekiq-scheduler", "~> 5.0.6"
 
-gem "redis", "~> 5.3.0"
+gem "redis", "~> 5.4.0"
 
 gem "hiredis-client", "~> 0.23.2"
 

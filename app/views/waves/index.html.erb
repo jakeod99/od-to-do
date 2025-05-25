@@ -1,6 +1,6 @@
 <h1>Waves</h1>
 <li>
   <% @waves.each do |wave| %>
-    <ul><%= link_to @wave.display_range, @wave %></ul>
+    <ul><%= link_to wave.display_range, wave %></ul>
   <% end %>
 </li>

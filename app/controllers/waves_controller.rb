@@ -30,6 +30,6 @@ class WavesController < ApplicationController
   def wave_commitment_redirect
     redirect_to new_wave_path if @current_wave.nil? && action_name != "new"
     redirect_to edit_wave_path(@current_wave.id) if @current_wave&.waiting? && action_name != "edit"
-    redirect_to show_wave_path(@current_wave.id) if @current_wave&.active? && action_name != "index"
+    redirect_to wave_path(@current_wave.id) if @current_wave&.active? && action_name != "index"
   end
 end

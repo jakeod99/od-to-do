@@ -1,0 +1,149 @@
+<div class="container">
+  <%= form_with url: recurring_task_templates_path do |form| %>
+    <div class="row justify-content-center pb-3">
+      <div class="col-11">
+        <%= form.label :title, class: "form-label" do %>
+          <strong>Title</strong>
+        <% end %>
+        <%= 
+          form.text_field(
+            :title,
+            placeholder: "Terse task summary",
+            class: "form-control form-control-lg",
+            required: true
+          )
+        %>
+      </div>
+    </div>
+    <div class="row justify-content-center pb-3">
+      <div class="col-11">
+        <%= form.label :description, class: "form-label" do %>
+          <strong>Description</strong>
+        <% end %>
+        <%= 
+          form.text_area(
+            :description,
+            placeholder: "Full task description, ideally with details like steps or a definition of done",
+            class: "form-control",
+            required: true
+          )
+        %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-5">
+        <%= form.label :complexity, class: "form-label" do %>
+          <strong>Complexity</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :complexity,
+            @intensity_levels,
+            { include_blank: "Complexity Level" },
+            { class: "form-select", required: true }
+          )
+        %>
+      </div>
+      <div class="col-5">
+        <%= form.label :urgency, class: "form-label" do %>
+          <strong>Urgency</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :urgency,
+            @intensity_levels,
+            { include_blank: "Urgency Level" },
+            { class: "form-select", required: true }
+          )
+        %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-3">
+        <%= form.label :frequency, class: "form-label" do %>
+          <strong>Frequency</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :frequency,
+            [ "Daily", "Weekly", "Monthly", "Yearly" ],
+            { include_blank: "Frequency" },
+            { class: "form-select", required: true }
+          )
+        %>
+      </div>
+      <div class="col-7">
+        <%= form.label :days, class: "form-label" do %>
+          <em>Days (comma separated, leave blank for daily)</em>
+        <% end %>
+        <%= 
+          form.text_field(
+            :days,
+            placeholder: "Weekly: Sunday-Saturday, Monthly: 1-31, or Yearly: 1/1-12/31",
+            class: "form-control form-control-lg"
+          )
+        %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-3">
+        <%= form.label :assign, class: "form-label" do %>
+          <strong>Assign To</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :assign,
+            @assignables,
+            { include_blank: "Unassigned" },
+            { class: "form-select" }
+          )
+        %>
+      </div>
+      <div class="col-3">
+        <%= form.label :categories, class: "form-label" do %>
+          <strong>Categories</strong>
+          <em>(select all that apply)</em>
+        <% end %>
+        <%= 
+          form.collection_check_boxes(
+            :categories,
+            @categories,
+            :id,
+            :name
+          ) do |cb|
+        %>
+          <div class="form-check">
+            <%= cb.check_box class: "form-check-input" %>
+            <%= cb.label class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-3">
+        <div class="form-check form-switch">
+          <%= form.check_box :active, class: "form-check-input", checked: true %>
+          <%= form.label :active, class: "form-check-label" do %>
+            <strong>Active</strong>
+          <% end %>
+        </div>
+        <div class="form-check form-switch">
+          <%= form.check_box :is_firm, class: "form-check-input" %>
+          <%= form.label :is_firm, class: "form-check-label" do %>
+            <strong>Firm Due Dates</strong>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row justify-content-center pb-3">
+      <div class="col-11 text-center">
+        <%= form.button type: "submit", class: "btn btn-primary text-light" do %>
+          <%= render "common/icon", icon: "plus-square" %>
+          <strong>Create</strong>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

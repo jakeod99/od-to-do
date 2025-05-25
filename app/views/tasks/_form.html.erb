@@ -1,0 +1,148 @@
+<% 
+  task ||= nil
+  form_params = task.nil? ? { url: tasks_path } : { model: task }
+%>
+
+<div class="container">
+  <%= form_with(**form_params) do |form| %>
+    <div class="row justify-content-center pb-3">
+      <div class="col-11">
+        <%= form.label :title, class: "form-label" do %>
+          <strong>Title</strong>
+        <% end %>
+        <%= 
+          form.text_field(
+            :title,
+            placeholder: "Terse task summary",
+            class: "form-control form-control-lg",
+            value: task&.title,
+            required: true
+          )
+        %>
+      </div>
+    </div>
+    <div class="row justify-content-center pb-3">
+      <div class="col-11">
+        <%= form.label :description, class: "form-label" do %>
+          <strong>Description</strong>
+        <% end %>
+        <%= 
+          form.text_area(
+            :description,
+            placeholder: "Full task description, maybe with steps or acceptance criteria",
+            class: "form-control",
+            required: true
+          )
+        %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-5">
+        <%= form.label :complexity, class: "form-label" do %>
+          <strong>Complexity</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :complexity,
+            @intensity_levels,
+            { include_blank: "Complexity Level" },
+            { class: "form-select", required: true }
+          )
+        %>
+      </div>
+      <div class="col-5">
+        <%= form.label :urgency, class: "form-label" do %>
+          <strong>Urgency</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :urgency,
+            @intensity_levels,
+            { include_blank: "Urgency Level" },
+            { class: "form-select", required: true }
+          )
+        %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-5">
+        <%= form.label :firm_due, class: "form-label" do %>
+          <em>Firm Due (optional)</em>
+        <% end %>
+        <%= form.date_field :firm_due, min: Date.today, class: "form-control" %>
+      </div>
+      <div class="col-5">
+        <%= form.label :suggested_due, class: "form-label" do %>
+          <em>Suggested Due (optional)</em>
+        <% end %>
+        <%= form.date_field :suggested_due, min: Date.today, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-3">
+        <%= form.label :assign, class: "form-label" do %>
+          <em>Assign To</em>
+        <% end %>
+        <%=
+          form.select(
+            :assign,
+            options_for_select(@assignables, task&.assigned_to&.id),
+            { include_blank: "Unassigned" },
+            { class: "form-select" }
+          )
+        %>
+      </div>
+      <div class="col-3">
+        <%= form.label :categories, class: "form-label" do %>
+          <strong>Categories</strong>
+          <em>(select all that apply)</em>
+        <% end %>
+        <%= 
+          form.collection_check_boxes(
+            :categories,
+            @categories,
+            :id,
+            :name
+          ) do |cb|
+        %>
+          <div class="form-check">
+            <%= 
+              cb.check_box(
+                class: "form-check-input",
+                checked: @checked_categories&.include?(cb.value)
+              )
+            %>
+            <%= cb.label class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-3">
+        <div class="form-check form-switch">
+          <%=
+            form.check_box(
+              :wave,
+              class: "form-check-input",
+              disabled: !@current_wave,
+              checked: task&.in_current_wave?
+            )
+          %>
+          <%= form.label :wave, class: "form-check-label" do %>
+            <strong><%= task.nil? ? "Add to" : "In" %> Current Wave</strong>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row justify-content-center pb-3">
+      <div class="col-11 text-center">
+        <%= form.button type: "submit", class: "btn btn-primary text-light" do %>
+          <%= render "common/icon", icon: (task.nil? ? "plus-square" : "floppy-fill" ) %>
+          <strong><%= task.nil? ? "Create" : "Update" %></strong>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

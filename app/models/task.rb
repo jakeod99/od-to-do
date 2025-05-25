@@ -74,6 +74,10 @@ class Task < ApplicationRecord
     complexity
   end
 
+  def in_current_wave?
+    waves.include?(Wave.current)
+  end
+
   private
 
   def update_wave_link_status

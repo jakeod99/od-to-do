@@ -23,7 +23,6 @@
 
   <body>
     <%= render "layouts/header" %>
-    <%= render "common/wave_warning" unless @current_wave&.active? %>
     <%= yield %>
   </body>
 </html>

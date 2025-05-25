@@ -1,5 +1,5 @@
 class WaitingWaveFinalizer < ApplicationService
-  def initialize(wave:)
+  def initialize(wave: Wave.current)
     @wave = wave
   end
 

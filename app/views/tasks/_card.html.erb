@@ -18,7 +18,26 @@
 %>
 
 <div class="card <%= border_class %>">
-  <h4 class="card-header <%= header_class %>"><%= task.title %></h4>
+  <div class="card-header <%= header_class %>">
+    <div class="row">
+      <div class="col-9">
+        <h4 class="mb-0">
+          <%= task.title %>
+        </h4>
+      </div>
+      <div class="col-3 text-end">
+        <%=
+          link_to(
+            is_recurring ? edit_recurring_task_template_path(task.id) : edit_task_path(task.id),
+            class: "btn btn-info text-light py-0 px-1",
+            role: "button"
+          ) do
+        %>
+          <%= render "common/icon", icon: "pencil-square" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
   <div class="card-body <%= border_class %>">
     <%= render "common/badge", classes: "#{first_badge_class} mb-2", content: first_badge_content %>
     <% task.categories.each do |category| %>
@@ -47,8 +66,8 @@
             <% end %>
           <% else %>
             <% if wave.present? %>
-              <span class="fw-bolder">Wave End:</span>
-              <%= wave.end_date.strftime("%-m/%-d/%y") %>
+              <span class="fw-bolder text-info">Wave End:</span>
+              <%= wave.end_at.strftime("%-m/%-d/%y") %>
             <% else %>
               <small class="fst-italic">No Defined Due Date</small>
             <% end %>

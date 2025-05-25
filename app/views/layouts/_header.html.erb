@@ -62,3 +62,10 @@
     </div>
   </div>
 </nav>
+
+<% if @current_wave&.active? %>
+  <br>
+<% else %>
+  <%= render "common/wave_warning" unless @current_wave&.active? %>
+<% end %>
+

@@ -31,10 +31,12 @@ class Wave < ApplicationRecord
 
   def complete!
     self[:status] = "completed"
+    self.save!
   end
 
   def activate!
     self[:status] = "active"
+    self.save!
   end
 
   def fully_in_current_year?

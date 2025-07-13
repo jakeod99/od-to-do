@@ -53,7 +53,6 @@ class TasksController < ApplicationController
 
   def write_params(under_task: false)
     incoming = under_task ? task_params[:task] : task_params
-    puts incoming.inspect
     assignable = User.find_by(id: incoming[:assign]) || Group.find_by(id: incoming[:assign])
     categories = Category.where(id: incoming[:categories].delete_if(&:empty?)) unless incoming[:categories].blank?
     incoming

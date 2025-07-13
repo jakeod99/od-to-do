@@ -1,5 +1,15 @@
+<% 
+  rtt ||= nil
+  form_params = 
+    if rtt
+      { url: recurring_task_template_path(rtt.id), model: rtt }
+    else
+      { url: recurring_task_templates_path }
+    end
+%>
+
 <div class="container">
-  <%= form_with url: recurring_task_templates_path do |form| %>
+  <%= form_with(**form_params) do |form| %>
     <div class="row justify-content-center pb-3">
       <div class="col-11">
         <%= form.label :title, class: "form-label" do %>
@@ -68,7 +78,7 @@
         <%= 
           form.select(
             :frequency,
-            [ "Daily", "Weekly", "Monthly", "Yearly" ],
+            options_for_select([ "Daily", "Weekly", "Monthly", "Yearly" ], rtt&.short_type),
             { include_blank: "Frequency" },
             { class: "form-select", required: true }
           )
@@ -81,6 +91,7 @@
         <%= 
           form.text_field(
             :days,
+            value: rtt&.days&.join(", "),
             placeholder: "Weekly: Sunday-Saturday, Monthly: 1-31, or Yearly: 1/1-12/31",
             class: "form-control form-control-lg"
           )
@@ -93,10 +104,10 @@
         <%= form.label :assign, class: "form-label" do %>
           <strong>Assign To</strong>
         <% end %>
-        <%= 
+        <%=
           form.select(
             :assign,
-            @assignables,
+            options_for_select(@assignables, rtt&.assigned_to&.id),
             { include_blank: "Unassigned" },
             { class: "form-select" }
           )
@@ -116,14 +127,19 @@
           ) do |cb|
         %>
           <div class="form-check">
-            <%= cb.check_box class: "form-check-input" %>
+            <%= 
+              cb.check_box(
+                class: "form-check-input",
+                checked: @checked_categories&.include?(cb.value)
+              )
+            %>
             <%= cb.label class: "form-check-label" %>
           </div>
         <% end %>
       </div>
       <div class="col-3">
         <div class="form-check form-switch">
-          <%= form.check_box :active, class: "form-check-input", checked: true %>
+          <%= form.check_box :active, class: "form-check-input", checked: rtt.nil? || rtt.status == "active" %>
           <%= form.label :active, class: "form-check-label" do %>
             <strong>Active</strong>
           <% end %>
@@ -140,8 +156,8 @@
     <div class="row justify-content-center pb-3">
       <div class="col-11 text-center">
         <%= form.button type: "submit", class: "btn btn-primary text-light" do %>
-          <%= render "common/icon", icon: "plus-square" %>
-          <strong>Create</strong>
+          <%= render "common/icon", icon: (rtt.nil? ? "plus-square" : "floppy-fill" ) %>
+          <strong><%= rtt.nil? ? "Create" : "Update" %></strong>
         <% end %>
       </div>
     </div>

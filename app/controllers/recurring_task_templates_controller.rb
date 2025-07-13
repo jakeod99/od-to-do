@@ -11,21 +11,29 @@ class RecurringTaskTemplatesController < ApplicationController
   def new; end
 
   def create
-    RecurringTaskTemplate.create!(create_params)
-    redirect_to root_path
+    rtt = RecurringTaskTemplate.create!(create_params)
+    redirect_to recurring_task_template_path(rtt.id)
   end
 
   def edit
     @recurring_task_template = RecurringTaskTemplate.find params[:id]
+    @checked_categories = @recurring_task_template.categories.pluck(:id)
   end
 
-  def update; end
+  def update
+    rtt = RecurringTaskTemplate.find params[:id]
+    rtt.update!(type: update_params[:type]) unless update_params[:type] == rtt.type
+
+    rtt = RecurringTaskTemplate.find params[:id] # initializes with new type
+    rtt.update!(update_params)
+    redirect_to recurring_task_template_path(rtt.id)
+  end
 
   def destroy; end
 
   private
 
-  def recurring_task_template_params
+  def rtt_params
     params.permit(
       :title,
       :description,
@@ -36,12 +44,21 @@ class RecurringTaskTemplatesController < ApplicationController
       :assign,
       :active,
       :is_firm,
-      categories: []
+      categories: [],
+      daily_recurring_task_template: {},
+      weekly_recurring_task_template: {},
+      monthly_recurring_task_template: {},
+      yearly_recurring_task_template: {},
     )
   end
 
-  def create_params
-    incoming = recurring_task_template_params
+  def write_params(under_rtt: false)
+    incoming =
+      if under_rtt
+        rtt_params.keep_if { |key, value| key.include?("recurring_task_template") }.values.first
+      else
+        rtt_params
+      end
     type = "#{incoming[:frequency]}RecurringTaskTemplate"
     days = incoming[:days].gsub(/\s+/, "").split(",")
     assignable = User.find_by(id: incoming[:assign]) || Group.find_by(id: incoming[:assign])
@@ -61,6 +78,17 @@ class RecurringTaskTemplatesController < ApplicationController
         cp[:is_firm] = is_firm
         cp[:status] = status
       end
+  end
+
+  def create_params
+    @create_params ||=
+      write_params.tap do |wp|
+        wp[:author] = @current_user
+      end
+  end
+
+  def update_params
+    @update_params ||= write_params(under_rtt: true)
   end
 
   def set_form_options

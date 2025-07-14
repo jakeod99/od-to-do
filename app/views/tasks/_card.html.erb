@@ -106,8 +106,15 @@
         <% if task.assigned_to %>
           <span class="fw-bolder">Assigned To:</span>
           <%= task.assigned_to.name %>
-        <% else %>
-          <%= link_to new_session_path, class: "btn btn-primary text-light py-0 px-1", role: "button" do %>
+        <% end %>
+        <% if !is_recurring && task.assignable? && task.assigned_to&.id != @current_user.id %>
+          <%= 
+            link_to(
+              task_assign_path(task.id, @current_user.id),
+              class: "btn btn-primary text-light py-0 px-1",
+              data: { turbo_method: :post }
+            ) do 
+          %>
             <%= render "common/icon", icon: "person-plus" %>
             Assign To Me!
           <% end %>

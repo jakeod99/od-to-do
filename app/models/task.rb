@@ -81,7 +81,7 @@ class Task < ApplicationRecord
   end
 
   def discardable?
-    waves.empty? && (draft? || unstarted?)
+    waves.empty? && assignable?
   end
 
   def discard!
@@ -89,6 +89,10 @@ class Task < ApplicationRecord
 
     self[:status] = "discarded"
     save!
+  end
+
+  def assignable?
+    draft? || unstarted?
   end
 
   private

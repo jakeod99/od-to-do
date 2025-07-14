@@ -19,7 +19,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "dashboard#index"
-  resources :tasks
+  resources :tasks do
+    post "assign/:assign_id", to: "tasks#assign", as: "assign"
+  end
   resources :waves, except: [ :destroy ]
   resources :recurring_task_templates
   resources :categories

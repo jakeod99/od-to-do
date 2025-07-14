@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :set_form_options, only: [ :new, :edit ]
-  before_action :set_task, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_task, only: [ :show, :edit, :update, :destroy, :assign ]
   def index
     @tasks = Task.all
   end
@@ -31,6 +31,16 @@ class TasksController < ApplicationController
 
   def destroy
     @task.discard!
+    redirect_back(fallback_location: root_path, notice: "Task discarded successfully")
+  end
+
+  def assign
+    assignable = User.find_by(id: params[:assign_id]) || Group.find_by(id: params[:assign_id])
+    if assignable
+      @task.assign_to = assignable
+      @task.save!
+      redirect_back(fallback_location: root_path, notice: "Task assigned successfully")
+    end
   end
 
   private
@@ -83,6 +93,7 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @task = Task.find params[:id]
+    id = params[:id] || params[:task_id]
+    @task = Task.find id
   end
 end

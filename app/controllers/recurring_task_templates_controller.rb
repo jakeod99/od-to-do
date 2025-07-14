@@ -29,6 +29,7 @@ class RecurringTaskTemplatesController < ApplicationController
 
   def destroy
     @recurring_task_template.discard!
+    redirect_back(fallback_location: root_path, notice: "Recurring Task Template discarded successfully")
   end
 
   private

@@ -1,6 +1,9 @@
 class TasksController < ApplicationController
   before_action :set_form_options, only: [ :new, :edit ]
-  before_action :set_task, only: [ :show, :edit, :update, :destroy, :assign ]
+  before_action(
+    :set_task,
+    only: [ :show, :edit, :update, :destroy, :add_to_wave, :remove_from_wave, :assign, :start ]
+  )
   def index
     @tasks = Task.all
   end
@@ -34,13 +37,33 @@ class TasksController < ApplicationController
     redirect_back(fallback_location: root_path, notice: "Task discarded successfully")
   end
 
+  def add_to_wave
+    if !@task.in_current_wave?
+      @current_wave.tasks << @task
+      redirect_back(fallback_location: root_path, notice: "Task added to current wave")
+    end
+  end
+
+  def remove_from_wave
+    tw_link = TaskWaveLink.where(wave: @current_wave, task: @task)&.first
+    if tw_link
+      tw_link.destroy
+      redirect_back(fallback_location: root_path, notice: "Task rmeoved from current wave")
+    end
+  end
+
   def assign
     assignable = User.find_by(id: params[:assign_id]) || Group.find_by(id: params[:assign_id])
-    if assignable
+    if assignable && @task.assignable?
       @task.assign_to = assignable
       @task.save!
       redirect_back(fallback_location: root_path, notice: "Task assigned successfully")
     end
+  end
+
+  def start
+    @task.start!
+    redirect_back(fallback_location: root_path)
   end
 
   private

@@ -128,15 +128,40 @@
             <span class="fw-bolder">Completed By:</span>
             <%= task.completed_by.name %>
           <% else %>
-            <% if task.unstarted? %>
-              <%= link_to new_session_path, class: "btn btn-primary text-light py-0 px-1 me-1", role: "button" do %>
-                <%= render "common/icon", icon: "play-circle" %>
-                Start Me!
+            <% if task.in_current_wave? %>
+              <%= 
+                link_to(
+                  task_remove_from_wave_path(task.id),
+                  class: "btn btn-warning text-light py-0 px-1",
+                  data: { turbo_method: :post }
+                ) do 
+              %>
+                <%= render "common/icon", icon: "tsunami" %>
+                Remove from Wave
               <% end %>
-            <% end %>
-            <%= link_to new_session_path, class: "btn btn-success text-light py-0 px-1", role: "button" do %>
-              <%= render "common/icon", icon: "check2-square" %>
-              Complete Me!
+              <% if @current_wave.active? %>
+                <% if task.unstarted? %>
+                  <%= link_to new_session_path, class: "btn btn-primary text-light py-0 px-1 me-1", role: "button" do %>
+                    <%= render "common/icon", icon: "play-circle" %>
+                    Start Me!
+                  <% end %>
+                <% end %>
+                <%= link_to new_session_path, class: "btn btn-success text-light py-0 px-1", role: "button" do %>
+                  <%= render "common/icon", icon: "check2-square" %>
+                  Complete Me!
+                <% end %>
+              <% end %>
+            <% elsif @current_wave.present? %>
+              <%= 
+                link_to(
+                  task_add_to_wave_path(task.id),
+                  class: "btn btn-primary text-light py-0 px-1",
+                  data: { turbo_method: :post }
+                ) do 
+              %>
+                <%= render "common/icon", icon: "tsunami" %>
+                Add to Wave
+              <% end %>
             <% end %>
           <% end %>
         </p>

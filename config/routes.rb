@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   root "dashboard#index"
   resources :tasks do
     post "assign/:assign_id", to: "tasks#assign", as: "assign"
+    post "start", to: "tasks#start", as: "start"
+    post "add_to_wave", to: "tasks#add_to_wave", as: "add_to_wave"
+    post "remove_from_wave", to: "tasks#remove_from_wave", as: "remove_from_wave"
   end
   resources :waves, except: [ :destroy ]
   resources :recurring_task_templates

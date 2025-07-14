@@ -81,7 +81,7 @@ class Task < ApplicationRecord
   end
 
   def discardable?
-    waves.empty? && assignable?
+    waves.where.not(status: "waiting").empty? && assignable?
   end
 
   def discard!
@@ -93,6 +93,17 @@ class Task < ApplicationRecord
 
   def assignable?
     draft? || unstarted?
+  end
+
+  def startable?
+    unstarted? && in_current_wave?
+  end
+
+  def start!
+    return unless startable?
+
+    self[:status] = "in_progress"
+    save!
   end
 
   private

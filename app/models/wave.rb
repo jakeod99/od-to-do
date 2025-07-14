@@ -53,9 +53,9 @@ class Wave < ApplicationRecord
   private
 
   def update_task_link_statuses
-    if status == "completed"
+    if completed?
       task_wave_links.planned.update_all(status: "rolled")
-    elsif status == "active"
+    elsif active?
       task_wave_links.update_all(status: "planned", in_initial_commitment: true)
     end
   end

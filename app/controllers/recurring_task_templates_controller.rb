@@ -1,12 +1,11 @@
 class RecurringTaskTemplatesController < ApplicationController
   before_action :set_form_options, only: [ :new, :edit ]
+  before_action :set_recurring_task_template, only: [ :show, :edit, :destroy ]
   def index
     @recurring_task_templates = RecurringTaskTemplate.all
   end
 
-  def show
-    @recurring_task_template = RecurringTaskTemplate.find params[:id]
-  end
+  def show; end
 
   def new; end
 
@@ -16,7 +15,6 @@ class RecurringTaskTemplatesController < ApplicationController
   end
 
   def edit
-    @recurring_task_template = RecurringTaskTemplate.find params[:id]
     @checked_categories = @recurring_task_template.categories.pluck(:id)
   end
 
@@ -29,7 +27,9 @@ class RecurringTaskTemplatesController < ApplicationController
     redirect_to recurring_task_template_path(rtt.id)
   end
 
-  def destroy; end
+  def destroy
+    @recurring_task_template.discard!
+  end
 
   private
 
@@ -72,7 +72,7 @@ class RecurringTaskTemplatesController < ApplicationController
         cp[:days] = days unless incoming[:frequency] == "Daily"
         cp[:complexity] = cp[:complexity].to_i
         cp[:urgency] = cp[:urgency].to_i
-        cp[:assign_to] = assignable unless assignable.nil?
+        cp[:assign_to] = assignable
         cp[:categories] = categories.to_a
         cp[:author] = @current_user
         cp[:is_firm] = is_firm
@@ -95,5 +95,9 @@ class RecurringTaskTemplatesController < ApplicationController
     @assignables = User.pluck(:name, :id) + Group.pluck(:name, :id)
     @categories = Category.custom
     @intensity_levels = Task::INTENSITY_LEVELS.to_a.map(&:reverse)
+  end
+
+  def set_recurring_task_template
+    @recurring_task_template = RecurringTaskTemplate.find params[:id]
   end
 end

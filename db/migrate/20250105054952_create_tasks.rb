@@ -1,6 +1,6 @@
 class CreateTasks < ActiveRecord::Migration[8.0]
   def up
-    create_enum :task_status, [ "draft", "unstarted", "in progress", "completed", "failed", "skipped", "discarded" ]
+    create_enum :task_status, [ "draft", "unstarted", "in_progress", "completed", "failed", "skipped", "discarded" ]
 
     create_table :tasks, id: :uuid do |t|
       t.enum :status, enum_type: :task_status, default: "draft", null: false

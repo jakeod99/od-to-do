@@ -15,7 +15,9 @@ class Task < ApplicationRecord
     5 => "High",
     8 => "Very High"
   }.freeze
-  STATUSES = [ "draft", "unstarted", "in progress", "completed", "failed", "skipped", "discarded" ].freeze
+  STATUSES = [ "draft", "unstarted", "in_progress", "completed", "failed", "skipped", "discarded" ].freeze
+
+  default_scope -> { where.not(status: "discarded") }
 
   STATUSES.each do |s|
     define_singleton_method s.to_sym do
@@ -78,10 +80,21 @@ class Task < ApplicationRecord
     waves.include?(Wave.current)
   end
 
+  def discardable?
+    waves.empty? && (draft? || unstarted?)
+  end
+
+  def discard!
+    return unless discardable?
+
+    self[:status] = "discarded"
+    save!
+  end
+
   private
 
   def update_wave_link_status
-    if [ "failed" ].include? status
+    if [ "failed", "discarded" ].include? status
       active_wave = waves.active.first
       task_wave_links.where(wave: active_wave).update_all(status: "foresaken")
     end

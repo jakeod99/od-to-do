@@ -53,7 +53,7 @@ class NewWaitingWaveCreator < ApplicationService
 
   def create_all_relevant_recurring_tasks # much room for performance optimization!
     RecurringTaskTemplate.active.each do |template|
-      @waiting_wave.tasks << template.create_tasks(@start_date, @end_date)
+      @waiting_wave.tasks << template.create_tasks!(@start_date, @end_date)
     end
   end
 end

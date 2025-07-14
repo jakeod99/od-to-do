@@ -8,6 +8,8 @@ class RecurringTaskTemplate < ApplicationRecord
 
   STATUSES = [ "inactive", "active", "discarded" ].freeze
 
+  default_scope -> { where.not(status: "discarded") }
+
   STATUSES.each do |s|
     define_singleton_method s do
       where(status: s)
@@ -72,11 +74,22 @@ class RecurringTaskTemplate < ApplicationRecord
     type.split(/(?=[A-Z])/).first
   end
 
-  def create_tasks(start_date, end_date)
+  def create_tasks!(start_date, end_date)
+    return unless active?
+
     create_arr = dates_in_range(start_date, end_date).map do |date|
       task_create_hash(date)
     end
     Task.create!(create_arr)
+  end
+
+  def discardable?
+    true
+  end
+
+  def discard!
+    self[:status] = "discarded"
+    self.save!
   end
 
   private

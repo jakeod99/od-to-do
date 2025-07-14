@@ -1,12 +1,11 @@
 class TasksController < ApplicationController
   before_action :set_form_options, only: [ :new, :edit ]
+  before_action :set_task, only: [ :show, :edit, :update, :destroy ]
   def index
     @tasks = Task.all
   end
 
-  def show
-    @task = Task.find params[:id]
-  end
+  def show; end
 
   def new; end
 
@@ -17,22 +16,22 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @task = Task.find params[:id]
     @checked_categories = @task.categories.pluck(:id)
   end
 
   def update
-    task = Task.find params[:id]
-    task.update!(update_params)
+    @task.update!(update_params)
     if task_params[:wave] == "1"
-      @current_wave.tasks << task if !@current_wave.tasks.include?(task)
+      @current_wave.tasks << @task if !@current_wave.tasks.include?(@task)
     else
-      @current_wave&.task_wave_links&.where(task: task)&.delete_all
+      @current_wave&.task_wave_links&.where(task: @task)&.delete_all
     end
-    redirect_to task
+    redirect_to @task
   end
 
-  def destroy; end
+  def destroy
+    @task.discard!
+  end
 
   private
 
@@ -60,7 +59,7 @@ class TasksController < ApplicationController
       .tap do |cp|
         cp[:complexity] = cp[:complexity].to_i
         cp[:urgency] = cp[:urgency].to_i
-        cp[:assign] = assignable unless assignable.nil?
+        cp[:assign] = assignable
         cp[:categories] = categories.to_a unless categories.nil?
       end
   end
@@ -81,5 +80,9 @@ class TasksController < ApplicationController
     @assignables = User.pluck(:name, :id) + Group.pluck(:name, :id)
     @categories = Category.custom
     @intensity_levels = Task::INTENSITY_LEVELS.to_a.map(&:reverse)
+  end
+
+  def set_task
+    @task = Task.find params[:id]
   end
 end

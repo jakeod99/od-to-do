@@ -1,7 +1,7 @@
 <%
   is_recurring = task.is_a? RecurringTaskTemplate
   status_color_map = {
-    "in progress" => "primary",
+    "in_progress" => "primary",
     "completed" => "success",
     "skipped" => "warning",
     "failed" => "danger"
@@ -34,6 +34,20 @@
           ) do
         %>
           <%= render "common/icon", icon: "pencil-square" %>
+        <% end %>
+        <% if task.discardable? %>
+          <%=
+            link_to(
+              is_recurring ? recurring_task_template_path(task) : task_path(task),
+              class: "btn btn-danger text-light py-0 px-1",
+              data: {
+                turbo_confirm: "DELETE actions are PERMANENT.\nAre you sure you want to DELETE?",
+                turbo_method: :delete
+              }
+            ) do
+          %>
+            <%= render "common/icon", icon: "trash" %>
+          <% end %>
         <% end %>
       </div>
     </div>

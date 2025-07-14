@@ -20,6 +20,6 @@ class TaskTerminator < ApplicationService
   end
 
   def tasks_to_terminate
-    Task.where(firm_due: ..(Date.yesterday), status: [ "unstarted", "in progress" ])
+    Task.where(firm_due: ..(Date.yesterday), status: [ "unstarted", "in_progress" ])
   end
 end

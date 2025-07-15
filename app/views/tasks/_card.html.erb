@@ -26,14 +26,16 @@
         </h4>
       </div>
       <div class="col-3 text-end">
-        <%=
-          link_to(
-            is_recurring ? edit_recurring_task_template_path(task.id) : edit_task_path(task.id),
-            class: "btn btn-info text-light py-0 px-1",
-            role: "button"
-          ) do
-        %>
-          <%= render "common/icon", icon: "pencil-square" %>
+        <% if task.editable? %>
+          <%=
+            link_to(
+              is_recurring ? edit_recurring_task_template_path(task.id) : edit_task_path(task.id),
+              class: "btn btn-info text-light py-0 px-1",
+              role: "button"
+            ) do
+          %>
+            <%= render "common/icon", icon: "pencil-square" %>
+          <% end %>
         <% end %>
         <% if task.discardable? %>
           <%=
@@ -60,35 +62,37 @@
     <p class="card-text"><%= task.description %></p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item <%= border_class %>">
-      <p class="mb-0">
-        <% if is_recurring %>
-          <span class="fw-bolder">Days:</span>
-          <%= task.display_days %>
-        <% else %>
-          <% if task.firm_due || task.suggested_due %>
-            <% if task.firm_due %>
-              <span class="fw-bolder <%= "text-danger" unless task.completed? %>">Firm Due:</span>
-              <%= task.firm_due.strftime("%-m/%-d/%y") %>
-            <% end %>
-            <% if task.suggested_due %>
-              <% if task.firm_due %>
-                <br>
-              <% end %>
-              <span class="fw-bolder text-warning">Suggested Due:</span>
-              <%= task.suggested_due.strftime("%-m/%-d/%y") %>
-            <% end %>
+    <% unless task.finished? %>
+      <li class="list-group-item <%= border_class %>">
+        <p class="mb-0">
+          <% if is_recurring %>
+            <span class="fw-bolder">Days:</span>
+            <%= task.display_days %>
           <% else %>
-            <% if wave.present? %>
-              <span class="fw-bolder text-info">Wave End:</span>
-              <%= wave.end_at.strftime("%-m/%-d/%y") %>
+            <% if task.firm_due || task.suggested_due %>
+              <% if task.firm_due %>
+                <span class="fw-bolder <%= "text-danger" unless task.completed? %>">Firm Due:</span>
+                <%= task.firm_due.strftime("%-m/%-d/%y") %>
+              <% end %>
+              <% if task.suggested_due %>
+                <% if task.firm_due %>
+                  <br>
+                <% end %>
+                <span class="fw-bolder text-warning">Suggested Due:</span>
+                <%= task.suggested_due.strftime("%-m/%-d/%y") %>
+              <% end %>
             <% else %>
-              <small class="fst-italic">No Defined Due Date</small>
+              <% if wave.present? %>
+                <span class="fw-bolder text-info">Wave End:</span>
+                <%= wave.end_at.strftime("%-m/%-d/%y") %>
+              <% else %>
+                <small class="fst-italic">No Defined Due Date</small>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
-      </p>
-    </li>
+        </p>
+      </li>
+    <% end %>
     <li class="list-group-item <%= border_class %>">
       <p class="mb-0">
         <span class="fw-bolder">Urgency:</span>
@@ -128,28 +132,59 @@
             <span class="fw-bolder">Completed By:</span>
             <%= task.completed_by.name %>
           <% else %>
-            <% if task.in_current_wave? %>
-              <%= 
-                link_to(
-                  task_remove_from_wave_path(task.id),
-                  class: "btn btn-warning text-light py-0 px-1",
-                  data: { turbo_method: :post }
-                ) do 
-              %>
-                <%= render "common/icon", icon: "tsunami" %>
-                Remove from Wave
+            <% if task.skipped? || task.failed? %>
+              <small class="fst-italic">Task Will Not Be Completed</small>
+            <% elsif task.in_current_wave? %>
+              <% if task.startable? %>
+                <%= 
+                  link_to(
+                    task_remove_from_wave_path(task.id),
+                    class: "btn btn-warning text-light py-0 px-1",
+                    data: { turbo_method: :post }
+                  ) do 
+                %>
+                  <%= render "common/icon", icon: "tsunami" %>
+                  Remove
+                <% end %>
               <% end %>
               <% if @current_wave.active? %>
-                <% if task.unstarted? %>
-                  <%= link_to new_session_path, class: "btn btn-primary text-light py-0 px-1 me-1", role: "button" do %>
+                <% if task.startable? %>
+                  <%=
+                    link_to(
+                      task_start_path(task.id),
+                      class: "btn btn-primary text-light py-0 px-1",
+                      data: { turbo_method: :post }
+                    ) do
+                  %>
                     <%= render "common/icon", icon: "play-circle" %>
-                    Start Me!
+                    Start
                   <% end %>
                 <% end %>
-                <%= link_to new_session_path, class: "btn btn-success text-light py-0 px-1", role: "button" do %>
-                  <%= render "common/icon", icon: "check2-square" %>
-                  Complete Me!
+                <% if task.unstartable? %>
+                  <%=
+                    link_to(
+                      task_unstart_path(task.id),
+                      class: "btn btn-warning text-light py-0 px-1",
+                      data: { turbo_method: :post }
+                    ) do
+                  %>
+                    <%= render "common/icon", icon: "pause-circle" %>
+                    Unstart
+                  <% end %>
                 <% end %>
+                  <%=
+                    link_to(
+                      task_complete_path(task.id),
+                      class: "btn btn-success text-light py-0 px-1",
+                      data: { 
+                        turbo_confirm: "Completing a task is PERMANENT.\nAre you sure you want to COMPLETE?",
+                        turbo_method: :post
+                      }
+                    ) do
+                  %>
+                    <%= render "common/icon", icon: "check2-square" %>
+                    Complete
+                  <% end %>
               <% end %>
             <% elsif @current_wave.present? %>
               <%= 
@@ -162,6 +197,8 @@
                 <%= render "common/icon", icon: "tsunami" %>
                 Add to Wave
               <% end %>
+            <% else %>
+              <small class="fst-italic">No Currently Active Wave</small>
             <% end %>
           <% end %>
         </p>

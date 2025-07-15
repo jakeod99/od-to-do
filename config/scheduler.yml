@@ -4,7 +4,7 @@ task_terminator:
   queue: default
   description: "Check if any tasks have failed on time, and handle updates accordingly"
 wave_terminator:
-  cron: '5 0 * * *'
+  cron: '11 0 * * *'
   class: WaveTerminationJob
   queue: default
   description: "Check if current wave has ended, then handle updates and rollover if it has"

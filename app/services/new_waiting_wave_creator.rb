@@ -13,6 +13,7 @@ class NewWaitingWaveCreator < ApplicationService
     begin
       ActiveRecord::Base.transaction do
         create_waiting_wave
+        add_all_tasks_due_in_range
         create_all_relevant_recurring_tasks
       end
     rescue ActiveRecord::Rollback => e
@@ -46,9 +47,25 @@ class NewWaitingWaveCreator < ApplicationService
   def create_waiting_wave
     @waiting_wave = Wave.create!(
       status: "waiting",
-      start_at: @start_date.to_datetime.change(offset: "-0500"),
-      end_at: @end_date.to_datetime.change(hour: 23, min: 59, sec: 59, offset: "-0500")
+      start_at: @start_date.in_time_zone,
+      end_at: @end_date.in_time_zone.change(hour: 23, min: 59, sec: 59)
     )
+  end
+
+  def tasks_due_in_range
+    Task
+      .unfinished
+      .where(firm_due: (@start_date..@end_date))
+      .or(
+        Task
+          .unfinished
+          .where(suggested_due: (@start_date..@end_date))
+      )
+      .distinct
+  end
+
+  def add_all_tasks_due_in_range
+    @waiting_wave.tasks << tasks_due_in_range
   end
 
   def create_all_relevant_recurring_tasks # much room for performance optimization!

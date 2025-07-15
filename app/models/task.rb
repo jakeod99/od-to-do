@@ -19,6 +19,8 @@ class Task < ApplicationRecord
 
   default_scope -> { where.not(status: "discarded") }
 
+  scope :unfinished, -> { where(status: [ "draft", "unstarted", "in_progress" ]) }
+
   STATUSES.each do |s|
     define_singleton_method s.to_sym do
       where(status: s)
@@ -106,12 +108,49 @@ class Task < ApplicationRecord
     save!
   end
 
+  def unstartable?
+    in_progress?
+  end
+
+  def unstart!
+    return unless unstartable?
+
+    self[:status] = "unstarted"
+    save!
+  end
+
+  def completable?
+    startable? || in_progress?
+  end
+
+  def complete!(by_user:)
+    return unless completable?
+
+    self[:status] = "completed"
+    self.completed_by = by_user if by_user
+    save!
+  end
+
+  def finished?
+    completed? || failed? || skipped? || discarded?
+  end
+
+  def unfinished?
+    !finished?
+  end
+
+  def editable?
+    unfinished?
+  end
+
   private
 
   def update_wave_link_status
-    if [ "failed", "discarded" ].include? status
-      active_wave = waves.active.first
+    active_wave = waves.active.first
+    if failed? || discarded?
       task_wave_links.where(wave: active_wave).update_all(status: "foresaken")
+    elsif completed?
+      task_wave_links.where(wave: active_wave).update_all(status: "completed")
     end
   end
 end

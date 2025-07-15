@@ -8,7 +8,7 @@
   <div class="col-auto">
     <%= 
       button_to(
-        waves_path(@current_wave),
+        wave_path(@current_wave.id),
         method: :patch,
         class: "btn btn-primary text-light",
         role: "button"
@@ -20,5 +20,7 @@
     <% end %>
   </div>
 </div>
-<h2 class="text-center pt-5 pb-3">This Wave's Tasks</h2>
-<%= render "tasks/all", tasks: @current_wave.tasks %>
+<h1 class="text-center pt-5 pb-3">Custom Tasks</h1>
+<%= render "tasks/all", tasks: @custom_tasks %>
+<h1 class="text-center pt-5 pb-3">Template-Generated Tasks</h1>
+<%= render "tasks/all", tasks: @generated_tasks %>

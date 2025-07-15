@@ -7,6 +7,8 @@ class WavesController < ApplicationController
 
   def show
     @wave = Wave.find params[:id]
+    @generated_tasks = @wave.tasks.where("authorable_type LIKE ?", "%RecurringTaskTemplate%")
+    @custom_tasks = @wave.tasks - @generated_tasks
   end
 
   def new; end
@@ -17,7 +19,8 @@ class WavesController < ApplicationController
   end
 
   def edit
-    @tasks = @current_wave.tasks
+    @generated_tasks = @current_wave.tasks.where("authorable_type LIKE ?", "%RecurringTaskTemplate%")
+    @custom_tasks = @current_wave.tasks - @generated_tasks
   end
 
   def update

@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_212944) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "recurring_task_template_status", ["draft", "inactive", "active", "discarded"]
-  create_enum "task_status", ["draft", "unstarted", "in progress", "completed", "failed", "skipped", "discarded"]
+  create_enum "task_status", ["draft", "unstarted", "in_progress", "completed", "failed", "skipped", "discarded"]
   create_enum "tasks_waves_status", ["planned", "rolled", "completed", "foresaken"]
   create_enum "wave_status", ["waiting", "active", "completed"]
 

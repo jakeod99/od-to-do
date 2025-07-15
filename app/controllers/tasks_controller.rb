@@ -1,9 +1,18 @@
 class TasksController < ApplicationController
   before_action :set_form_options, only: [ :new, :edit ]
-  before_action(
-    :set_task,
-    only: [ :show, :edit, :update, :destroy, :add_to_wave, :remove_from_wave, :assign, :start ]
-  )
+  before_action(:set_task, only: [
+    :show,
+    :edit,
+    :update,
+    :destroy,
+    :add_to_wave,
+    :remove_from_wave,
+    :assign,
+    :start,
+    :unstart,
+    :complete
+  ])
+
   def index
     @tasks = Task.all
   end
@@ -48,7 +57,7 @@ class TasksController < ApplicationController
     tw_link = TaskWaveLink.where(wave: @current_wave, task: @task)&.first
     if tw_link
       tw_link.destroy
-      redirect_back(fallback_location: root_path, notice: "Task rmeoved from current wave")
+      redirect_back(fallback_location: root_path, notice: "Task removed from current wave")
     end
   end
 
@@ -63,6 +72,16 @@ class TasksController < ApplicationController
 
   def start
     @task.start!
+    redirect_back(fallback_location: root_path)
+  end
+
+  def unstart
+    @task.unstart!
+    redirect_back(fallback_location: root_path)
+  end
+
+  def complete
+    @task.complete!(by_user: @current_user)
     redirect_back(fallback_location: root_path)
   end
 

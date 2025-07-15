@@ -1,4 +1,8 @@
-<h1 class="text-center pt-5 pb-1"></h1>
+<h1 class="text-center pt-5 pb-1">
   <%= "#{ @wave.completed? ? "Former" : "Current" } Wave" %>
 </h1>
 <p class="text-center"><%= @current_wave.display_range %></p>
+<h1 class="text-center pt-5 pb-3">Custom Tasks</h1>
+<%= render "tasks/all", tasks: @custom_tasks %>
+<h1 class="text-center pt-5 pb-3">Template-Generated Tasks</h1>
+<%= render "tasks/all", tasks: @generated_tasks %>

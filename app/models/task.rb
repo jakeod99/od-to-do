@@ -20,6 +20,7 @@ class Task < ApplicationRecord
   default_scope -> { where.not(status: "discarded") }
 
   scope :unfinished, -> { where(status: [ "draft", "unstarted", "in_progress" ]) }
+  scope :finished, -> { where(status: [ "completed", "failed", "skipped", "discarded" ]) }
 
   STATUSES.each do |s|
     define_singleton_method s.to_sym do
@@ -152,6 +153,10 @@ class Task < ApplicationRecord
 
     self[:status] = "skipped"
     save!
+  end
+
+  def assigned_to?(id)
+    assignable_id == id
   end
 
   private

@@ -69,6 +69,24 @@ class TaskSearchQuery < ApplicationQuery
 
       where(assignable_id: assigned_to_ids)
     end
+
+    def order_by_update(order_by_update)
+      return self unless [ :asc, :desc ].include? order_by_update
+
+      order(updated_at: :desc)
+    end
+
+    def order_by_due(order_by_due)
+      return self unless [ :asc, :desc ].include? order_by_due
+
+      order(firm_due: order_by_due, suggested_due: order_by_due)
+    end
+
+    def order_by_urgency(order_by_urgency)
+      return self unless [ :asc, :desc ].include? order_by_urgency
+
+      order(urgency: order_by_urgency)
+    end
   end
 
   def initialize(scope: Task.all)
@@ -88,7 +106,9 @@ class TaskSearchQuery < ApplicationQuery
       .by_status(filters[:status])
       .by_category(filters[:categories])
       .by_assigned_to(filters[:assigned_to])
-      .order(updated_at: :desc)
+      .order_by_update(filters[:order_by_update])
+      .order_by_due(filters[:order_by_due])
+      .order_by_urgency(filters[:order_by_urgency])
       .distinct
   end
 end

@@ -1,6 +1,6 @@
 class TaskSearcher < ApplicationService
   def initialize(filters: {})
-    @filters = filters
+    @filters = filters.merge({ order_by_update: :desc })
   end
 
   def call

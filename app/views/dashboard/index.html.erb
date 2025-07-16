@@ -1,9 +1,57 @@
-<h1>Dashboard</h1>
+<h1 class="text-center"><%= @current_user.name %>'s Current Wave Dashboard</h1>
 
-<h3>New Task Modal</h3>
+<% if @unassigned.present? %>
+  <h1 class="text-center pt-5">Tasks Yet Unassigned</h1>
+  <p class="text-center pb-3">
+    <em><strong><%= @unassigned.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: @unassigned %>
+<% end %>
 
-<h3>Suggested Tasks</h3>
+<% if @in_progress.present? %>
+  <h1 class="text-center pt-5">Your In Progress</h1>
+  <p class="text-center pb-3">
+    <em><strong><%= @in_progress.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: @in_progress %>
+<% end %>
 
-<h3>Remaining Upcoming Tasks</h3>
+<% if @today.present? %>
+  <h1 class="text-center pt-5">Your Unstarted and Due Today</h1>
+  <p class="text-center pb-3">
+    <em><strong><%= @today.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: @today %>
+<% end %>
 
-<h3>Completed Tasks</h3>
+<% if @tomorrow.present? %>
+  <h1 class="text-center pt-5">Your Unstarted and Due Tomorrow</h1>
+  <p class="text-center pb-3">
+    <em><strong><%= @today.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: @tomorrow %>
+<% end %>
+
+<% if @other.present? %>
+  <h1 class="text-center pt-5">Your Other Remaining Tasks</h1>
+  <p class="text-center pb-3">
+    <em><strong><%= @other.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: @other %>
+<% end %>
+
+<% if @completed.present? %>
+  <h1 class="text-center pt-5">Your Completed Tasks</h1>
+  <p class="text-center pb-3">
+    <em><strong><%= @completed.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: @completed %>
+<% end %>
+
+<% if @dishonor.present? %>
+  <h1 class="text-center pt-5">Your Skipped and Failed Tasks</h1>
+  <p class="text-center pb-3">
+    <em><strong><%= @dishonor.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: @dishonor %>
+<% end %>

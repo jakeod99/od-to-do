@@ -6,6 +6,7 @@ class WaveTerminator < ApplicationService
     wave = waves.first
     begin
       ActiveRecord::Base.transaction do
+        wave.tasks.in_progress.update_all(status: "unstarted")
         wave.complete!
       end
     rescue ActiveRecord::Rollback => e

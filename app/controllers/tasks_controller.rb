@@ -26,8 +26,8 @@ class TasksController < ApplicationController
   def new; end
 
   def create
-    task = Task.create!(create_params)
-    @current_wave.tasks << task if task_params[:wave] == "1"
+    task = Task.create!(create_params.except(:wave))
+    @current_wave.tasks << task if create_params[:wave]
     redirect_to task
   end
 
@@ -36,8 +36,8 @@ class TasksController < ApplicationController
   end
 
   def update
-    @task.update!(update_params)
-    if task_params[:wave] == "1"
+    @task.update!(update_params.except(:wave))
+    if update_params[:wave]
       @current_wave.tasks << @task if !@current_wave.tasks.include?(@task)
     else
       @current_wave&.task_wave_links&.where(task: @task)&.delete_all
@@ -116,12 +116,13 @@ class TasksController < ApplicationController
     assignable = User.find_by(id: incoming[:assign]) || Group.find_by(id: incoming[:assign])
     categories = Category.where(id: incoming[:categories].delete_if(&:empty?)) unless incoming[:categories].blank?
     incoming
-      .slice(:title, :description, :complexity, :urgency, :firm_due, :suggested_due)
+      .slice(:title, :description, :complexity, :urgency, :firm_due, :suggested_due, :wave)
       .tap do |cp|
         cp[:complexity] = cp[:complexity].to_i
         cp[:urgency] = cp[:urgency].to_i
         cp[:assign] = assignable
         cp[:categories] = categories.to_a unless categories.nil?
+        cp[:wave] = cp[:wave].to_i == 1
       end
   end
 

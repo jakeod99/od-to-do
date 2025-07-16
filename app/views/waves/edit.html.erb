@@ -20,7 +20,13 @@
     <% end %>
   </div>
 </div>
-<h1 class="text-center pt-5 pb-3">Custom Tasks</h1>
+<h1 class="text-center pt-5">Custom Tasks</h1>
+<p class="text-center pb-3">
+  <em><strong><%= @custom_tasks.count %></strong> Custom Tasks Added to Wave</em>
+</p>
 <%= render "tasks/all", tasks: @custom_tasks %>
-<h1 class="text-center pt-5 pb-3">Template-Generated Tasks</h1>
+<h1 class="text-center pt-5">Generated Tasks</h1>
+<p class="text-center pb-3">
+  <em><strong><%= @generated_tasks.count %></strong> Tasks Generated</em>
+</p>
 <%= render "tasks/all", tasks: @generated_tasks %>

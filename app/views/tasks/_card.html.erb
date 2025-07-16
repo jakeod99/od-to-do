@@ -167,7 +167,7 @@
                   Remove
                 <% end %>
               <% end %>
-              <% if @current_wave.active? %>
+              <% if @current_wave.active? && task.assigned_to?(@current_user.id) %>
                 <% if task.startable? %>
                   <%=
                     link_to(
@@ -228,6 +228,6 @@
   <%= render( 
     "common/card_footer",
     model: task,
-    author_name: task.author.is_a?(RecurringTaskTemplate) ? "Recurring Task Template" : task.author.name
+    author_name: task.author.is_a?(RecurringTaskTemplate) ? "Template" : task.author.name
   )%>
 </div>

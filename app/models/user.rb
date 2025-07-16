@@ -14,4 +14,8 @@ class User < ApplicationRecord
   def admin?
     type == "Admin"
   end
+
+  def assignable_ids
+    groups.pluck(:id).to_a + [ id ]
+  end
 end

@@ -20,49 +20,69 @@
 <div class="card <%= border_class %>">
   <div class="card-header <%= header_class %>">
     <div class="row">
-      <div class="col-9">
+      <div class="col-12">
         <h4 class="mb-0">
           <%= task.title %>
         </h4>
       </div>
-      <div class="col-3 text-end">
-        <% if task.editable? %>
-          <%=
-            link_to(
-              is_recurring ? edit_recurring_task_template_path(task.id) : edit_task_path(task.id),
-              class: "btn btn-info text-light py-0 px-1",
-              role: "button"
-            ) do
-          %>
-            <%= render "common/icon", icon: "pencil-square" %>
-          <% end %>
-        <% end %>
-        <% if task.discardable? %>
-          <%=
-            link_to(
-              is_recurring ? recurring_task_template_path(task) : task_path(task),
-              class: "btn btn-danger text-light py-0 px-1",
-              data: {
-                turbo_confirm: "DELETE actions are PERMANENT.\nAre you sure you want to DELETE?",
-                turbo_method: :delete
-              }
-            ) do
-          %>
-            <%= render "common/icon", icon: "trash" %>
-          <% end %>
-        <% end %>
-      </div>
     </div>
   </div>
   <div class="card-body <%= border_class %>">
-    <%= render "common/badge", classes: "#{first_badge_class} mb-2", content: first_badge_content %>
-    <% task.categories.each do |category| %>
-      <%= render "common/badge", classes: "mb-2", color: category.color, content: category.name %>
-    <% end %>
+    <div class="row">
+      <div class="col-6">
+        <%= render "common/badge", classes: "#{first_badge_class} mb-2", content: first_badge_content %>
+      </div>
+      <% if task.editable? || task.skippable? || task.discardable? %>
+        <div class="col-6 text-end">
+          <% if task.editable? %>
+            <%=
+              link_to(
+                is_recurring ? edit_recurring_task_template_path(task.id) : edit_task_path(task.id),
+                class: "btn btn-info text-light py-0 px-1",
+                role: "button"
+              ) do
+            %>
+              <%= render "common/icon", icon: "pencil-square" %>
+            <% end %>
+          <% end %>
+          <% if task.skippable? %>
+            <%=
+              link_to(
+                task_skip_path(task.id),
+                class: "btn btn-warning text-light py-0 px-1",
+                data: {
+                  turbo_confirm: "SKIP actions are PERMANENT.\nAre you sure you want to SKIP?",
+                  turbo_method: :post
+                }
+              ) do
+            %>
+              <%= render "common/icon", icon: "ban" %>
+            <% end %>
+          <% end %>
+          <% if task.discardable? %>
+            <%=
+              link_to(
+                is_recurring ? recurring_task_template_path(task) : task_path(task),
+                class: "btn btn-danger text-light py-0 px-1",
+                data: {
+                  turbo_confirm: "DELETE actions are PERMANENT.\nAre you sure you want to DELETE?",
+                  turbo_method: :delete
+                }
+              ) do
+            %>
+              <%= render "common/icon", icon: "trash" %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
     <p class="card-text"><%= task.description %></p>
+    <% task.categories.each do |category| %>
+      <%= render "common/badge", color: category.color, content: category.name %>
+    <% end %>
   </div>
   <ul class="list-group list-group-flush">
-    <% unless task.finished? %>
+    <% if !is_recurring && task.unfinished? %>
       <li class="list-group-item <%= border_class %>">
         <p class="mb-0">
           <% if is_recurring %>

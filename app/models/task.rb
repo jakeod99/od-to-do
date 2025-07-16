@@ -143,14 +143,27 @@ class Task < ApplicationRecord
     unfinished?
   end
 
+  def skippable?
+    unfinished?
+  end
+
+  def skip!
+    return unless skippable?
+
+    self[:status] = "skipped"
+    save!
+  end
+
   private
 
   def update_wave_link_status
     active_wave = waves.active.first
-    if failed? || discarded?
-      task_wave_links.where(wave: active_wave).update_all(status: "foresaken")
-    elsif completed?
-      task_wave_links.where(wave: active_wave).update_all(status: "completed")
+    if active_wave.present?
+      if failed? || discarded? || skipped?
+        task_wave_links.where(wave: active_wave).update_all(status: "foresaken")
+      elsif completed?
+        task_wave_links.where(wave: active_wave).update_all(status: "completed")
+      end
     end
   end
 end

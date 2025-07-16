@@ -83,8 +83,16 @@ class RecurringTaskTemplate < ApplicationRecord
     Task.create!(create_arr)
   end
 
+  def editable?
+    true
+  end
+
   def discardable?
     true
+  end
+
+  def skippable?
+    false
   end
 
   def discard!

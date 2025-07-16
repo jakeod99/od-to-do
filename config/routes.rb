@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     post "assign/:assign_id", to: "tasks#assign", as: "assign"
     post "start", to: "tasks#start", as: "start"
     post "unstart", to: "tasks#unstart", as: "unstart"
+    post "skip", to: "tasks#skip", as: "skip"
     post "complete", to: "tasks#complete", as: "complete"
     post "add_to_wave", to: "tasks#add_to_wave", as: "add_to_wave"
     post "remove_from_wave", to: "tasks#remove_from_wave", as: "remove_from_wave"

@@ -1,3 +1,7 @@
-<h1>Search Form</h1>
-
+<h1 class="text-center">Tasks</h1>
+<%= render "tasks/search_form" %>
+<hr class="mt-0" />
+<p class="text-center">
+  <em>Showing <strong><%= @tasks.count %> of <%= @total_count %></strong> Task Results</em>
+</p>
 <%= render "tasks/all", tasks: @tasks %>

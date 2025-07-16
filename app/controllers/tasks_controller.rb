@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_form_options, only: [ :new, :edit ]
+  before_action :set_form_options, only: [ :new, :edit, :index ]
   before_action(:set_task, only: [
     :show,
     :edit,
@@ -10,11 +10,15 @@ class TasksController < ApplicationController
     :assign,
     :start,
     :unstart,
+    :skip,
     :complete
   ])
 
   def index
-    @tasks = Task.all
+    search_result = TaskSearcher.call(filters: params)
+    unless search_result.failure?
+      @total_count, @tasks = search_result.content.fetch_values(:total_count, :tasks)
+    end
   end
 
   def show; end
@@ -77,6 +81,11 @@ class TasksController < ApplicationController
 
   def unstart
     @task.unstart!
+    redirect_back(fallback_location: root_path)
+  end
+
+  def skip
+    @task.skip!
     redirect_back(fallback_location: root_path)
   end
 

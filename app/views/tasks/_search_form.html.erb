@@ -1,0 +1,191 @@
+<div class="container">
+  <%= form_with url: tasks_path, method: :get, local: true do |form| %>
+
+    <div class="row justify-content-center pb-3">
+      <div class="col-2 mt-auto">
+        <%= form.button type: "submit", class: "btn btn-primary text-light px-4 py-3" do %>
+          <%= render "common/icon", icon: "search" %>
+          <strong>Search</strong>
+        <% end %>
+      </div>
+      <div class="col-10">
+        <%= form.label :title, class: "form-label" do %>
+          <strong>Title Text</strong>
+        <% end %>
+        <%= 
+          form.text_field(
+            :title,
+            value: params[:title],
+            placeholder: "Simple Task Title Search",
+            class: "form-control form-control-lg"
+          )
+        %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-3">
+        <%= form.label :wave, class: "form-label" do %>
+          <strong>Wave</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :wave,
+            options_for_select([ "Current Wave", "Outside Current Wave" ], params[:wave]),
+            { include_blank: "Any Wave" },
+            { class: "form-select", disabled: !@current_wave }
+          )
+        %>
+      </div>
+      <div class="col-3">
+        <%= form.label :source, class: "form-label" do %>
+          <strong>Source</strong>
+        <% end %>
+        <%= 
+          form.select(
+            :source,
+            options_for_select([ "Custom", "Generated" ], params[:source]),
+            { include_blank: "Any Source" },
+            { class: "form-select" }
+          )
+        %>
+      </div>
+      <div class="col-3">
+        <%= form.label :due_after, class: "form-label" do %>
+          <strong>Due After</strong>
+        <% end %>
+        <%= form.date_field :due_after, value: params[:due_after], class: "form-control" %>
+      </div>
+      <div class="col-3">
+        <%= form.label :due_before, class: "form-label" do %>
+          <strong>Due Before</strong>
+        <% end %>
+        <%= form.date_field :due_before, value: params[:due_before], class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="row justify-content-around pb-3">
+      <div class="col-2">
+        <%= form.label :urgency, class: "form-label" do %>
+          <strong>Urgency</strong>
+        <% end %>
+        <%= 
+          form.collection_check_boxes(
+            :urgency,
+            @intensity_levels,
+            :second,
+            :first
+          ) do |cb|
+        %>
+          <div class="form-check">
+            <%= 
+              cb.check_box(
+                class: "form-check-input",
+                checked: params[:urgency]&.include?(cb.value.to_s)
+              )
+            %>
+            <%= cb.label class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-2">
+        <%= form.label :complexity, class: "form-label" do %>
+          <strong>Complexity</strong>
+        <% end %>
+        <%= 
+          form.collection_check_boxes(
+            :complexity,
+            @intensity_levels,
+            :second,
+            :first
+          ) do |cb|
+        %>
+          <div class="form-check">
+            <%= 
+              cb.check_box(
+                class: "form-check-input",
+                checked: params[:complexity]&.include?(cb.value.to_s)
+              )
+            %>
+            <%= cb.label class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-2">
+        <%= form.label :status, class: "form-label" do %>
+          <strong>Status</strong>
+        <% end %>
+        <%= 
+          form.collection_check_boxes(
+            :status,
+            [
+              [ "Unstarted", "unstarted" ],
+              [ "In Progress", "in_progress" ],
+              [ "Completed", "completed" ],
+              [ "Skipped", "skipped" ],
+              [ "Failed", "failed" ]
+            ],
+            :second,
+            :first
+          ) do |cb|
+        %>
+          <div class="form-check">
+            <%= 
+              cb.check_box(
+                class: "form-check-input",
+                checked: params[:status]&.include?(cb.value)
+              )
+            %>
+            <%= cb.label class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-2">
+        <%= form.label :categories, class: "form-label" do %>
+          <strong>Categories</strong>
+        <% end %>
+        <%= 
+          form.collection_check_boxes(
+            :categories,
+            @categories,
+            :id,
+            :name
+          ) do |cb|
+        %>
+          <div class="form-check">
+            <%= 
+              cb.check_box(
+                class: "form-check-input",
+                checked: params[:categories]&.include?(cb.value)
+              )
+            %>
+            <%= cb.label class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-2">
+        <%= form.label :assigned_to, class: "form-label" do %>
+          <strong>Assigned To</strong>
+        <% end %>
+        <%= 
+          form.collection_check_boxes(
+            :assigned_to,
+            @assignables,
+            :second,
+            :first
+          ) do |cb|
+        %>
+          <div class="form-check">
+            <%= 
+              cb.check_box(
+                class: "form-check-input",
+                checked: params[:assigned_to]&.include?(cb.value)
+              )
+            %>
+            <%= cb.label class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

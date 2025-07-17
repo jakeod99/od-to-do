@@ -19,7 +19,19 @@ class YearlyRecurringTaskTemplate < RecurringTaskTemplate
   def days=(input)
     new_input =
       if input.is_a? Array
-        input.map { |date| date.is_a?(Date) ? "#{date.month}/#{date.mday}" : date }.join(",")
+        input
+          .map { |date| date.is_a?(Date) ? "#{date.month}/#{date.mday}" : date.to_s }
+          .keep_if do |d|
+            month, day = d.split("/")
+            month.to_i > 0 && month.to_i < 13 && day.to_i > 0 && day.to_i < 32
+          end
+          .uniq
+          .sort do |a, b|
+            a_arr = a.split("/").map(&:to_i)
+            b_arr = b.split("/").map(&:to_i)
+            a_arr <=> b_arr # compares first element (months), then second (day) if necessary
+          end
+          .join(",")
       else
         input
       end

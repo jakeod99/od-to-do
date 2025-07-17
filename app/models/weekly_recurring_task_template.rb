@@ -15,7 +15,11 @@ class WeeklyRecurringTaskTemplate < RecurringTaskTemplate
           weekday = raw_weekday.try(:downcase) || raw_weekday
           WEEKDAY_MAP.keys.include?(weekday.to_s) ? weekday.to_s : WEEKDAY_MAP.key(weekday)
         end
-        days_arr.join(",")
+        days_arr
+          .compact
+          .uniq
+          .sort { |a, b| WEEKDAY_MAP[a] <=> WEEKDAY_MAP[b] }
+          .join(",")
       else
         input
       end
@@ -24,6 +28,10 @@ class WeeklyRecurringTaskTemplate < RecurringTaskTemplate
 
   def display_days
     days.map(&:titleize).join(", ")
+  end
+
+  def earliest_day_value
+    WEEKDAY_MAP[days.first]
   end
 
   private

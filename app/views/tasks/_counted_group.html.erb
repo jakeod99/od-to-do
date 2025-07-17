@@ -1,0 +1,7 @@
+<% if tasks.present? %>
+  <h2 class="text-center pt-3 mb-0"><%= title %></h2>
+  <p class="text-center">
+    <em><strong><%= tasks.count %></strong> Tasks</em>
+  </p>
+  <%= render "tasks/all", tasks: tasks %>
+<% end %>

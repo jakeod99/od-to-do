@@ -6,8 +6,32 @@
     <%= link_to root_path, class: "navbar-brand d-block d-sm-none me-0" do %>
       <%= image_tag "small-logo.png" %>
     <% end %>
+    <%=
+      link_to(
+        new_task_path,
+        class: "btn btn-primary d-none d-sm-block text-light btn-lg",
+        role: "button"
+      ) do
+    %>
+      <strong>
+        <%= render "common/icon", icon: "plus-circle" %>
+        New Task
+      </strong>
+    <% end %>
+    <%=
+      link_to(
+        new_task_path,
+        class: "btn btn-primary d-block d-sm-none text-light",
+        role: "button"
+      ) do
+    %>
+      <strong>
+        <%= render "common/icon", icon: "plus-circle" %>
+        New Task
+      </strong>
+    <% end %>
 
-    <div class="nav-item">
+    <div class="nav-item d-none d-lg-block">
       <%= link_to root_path, class: "nav-link" do %>
         <strong>Dashboard</strong>
       <% end %>
@@ -17,22 +41,22 @@
         <strong>Tasks</strong>
       <% end %>
     </div>
-    <div class="nav-item d-none d-sm-block">
-      <%= link_to waves_path, class: "nav-link" do %>
-        <strong>Waves</strong>
-      <% end %>
-    </div>
-    <div class="nav-item d-none d-md-block">
+    <div class="nav-item">
       <%= link_to recurring_task_templates_path, class: "nav-link" do %>
         <strong>Recurring</strong>
       <% end %>
     </div>
     <div class="nav-item d-none d-md-block">
+      <%= link_to waves_path, class: "nav-link" do %>
+        <strong>Waves</strong>
+      <% end %>
+    </div>
+    <div class="nav-item d-none d-lg-block">
       <%= link_to categories_path, class: "nav-link" do %>
         <strong>Categories</strong>
       <% end %>
     </div>
-    <div class="nav-item d-none d-md-block">
+    <div class="nav-item d-none d-lg-block">
       <%= link_to groups_path, class: "nav-link" do %>
         <strong>Groups</strong>
       <% end %>

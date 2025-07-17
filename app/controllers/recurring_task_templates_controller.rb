@@ -1,8 +1,24 @@
 class RecurringTaskTemplatesController < ApplicationController
   before_action :set_form_options, only: [ :new, :edit ]
-  before_action :set_recurring_task_template, only: [ :show, :edit, :destroy ]
+  before_action :set_recurring_task_template, only: [
+    :show,
+    :edit,
+    :destroy,
+    :activate,
+    :deactivate
+  ]
+
   def index
-    @recurring_task_templates = RecurringTaskTemplate.all
+    @daily = DailyRecurringTaskTemplate.order(updated_at: :desc)
+    @weekly = WeeklyRecurringTaskTemplate.all.sort do
+      |a, b| a.earliest_day_value <=> b.earliest_day_value
+    end
+    @monthly = MonthlyRecurringTaskTemplate.all.sort { |a, b| a.days.min <=> b.days.min }
+    @yearly = YearlyRecurringTaskTemplate.all.sort do |a, b|
+      a_arr = a.days.first.split("/").map(&:to_i)
+      b_arr = b.days.first.split("/").map(&:to_i)
+      a_arr <=> b_arr # compares first element (months), then second (day) if necessary
+    end
   end
 
   def show; end
@@ -30,6 +46,16 @@ class RecurringTaskTemplatesController < ApplicationController
   def destroy
     @recurring_task_template.discard!
     redirect_back(fallback_location: root_path, notice: "Recurring Task Template discarded successfully")
+  end
+
+  def activate
+    @recurring_task_template.activate!
+    redirect_back(fallback_location: root_path)
+  end
+
+  def deactivate
+    @recurring_task_template.deactivate!
+    redirect_back(fallback_location: root_path)
   end
 
   private
@@ -99,6 +125,7 @@ class RecurringTaskTemplatesController < ApplicationController
   end
 
   def set_recurring_task_template
-    @recurring_task_template = RecurringTaskTemplate.find params[:id]
+    id = params[:id] || params[:recurring_task_template_id]
+    @recurring_task_template = RecurringTaskTemplate.find id
   end
 end

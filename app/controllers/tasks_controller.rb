@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :set_form_options, only: [ :new, :edit, :index ]
-  before_action(:set_task, only: [
+  before_action :set_task, only: [
     :show,
     :edit,
     :update,
@@ -8,11 +8,12 @@ class TasksController < ApplicationController
     :add_to_wave,
     :remove_from_wave,
     :assign,
+    :unassign,
     :start,
     :unstart,
     :skip,
     :complete
-  ])
+  ]
 
   def index
     search_result = TaskSearcher.call(filters: params)
@@ -72,6 +73,11 @@ class TasksController < ApplicationController
       @task.save!
       redirect_back(fallback_location: root_path, notice: "Task assigned successfully")
     end
+  end
+
+  def unassign
+    @task.unassign!
+    redirect_back(fallback_location: root_path)
   end
 
   def start

@@ -98,6 +98,11 @@ class Task < ApplicationRecord
     draft? || unstarted?
   end
 
+  def unassign!
+    self.assignable = nil
+    self.save!
+  end
+
   def startable?
     unstarted? && in_current_wave?
   end
@@ -129,6 +134,7 @@ class Task < ApplicationRecord
 
     self[:status] = "completed"
     self.completed_by = by_user if by_user
+    self.completed_at = DateTime.now
     save!
   end
 

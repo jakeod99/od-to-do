@@ -12,7 +12,17 @@ class MonthlyRecurringTaskTemplate < RecurringTaskTemplate
   end
 
   def days=(input)
-    super(input.is_a?(Array) ? input.join(",") : input)
+    super(
+      if input.is_a?(Array)
+        input
+          .keep_if { |e| e.to_i > 0 && e.to_i < 32 }
+          .uniq
+          .sort { |a, b| a.to_i <=> b.to_i }
+          .join(",")
+      else
+        input
+      end
+    )
   end
 
   def display_days

@@ -1,6 +1,10 @@
-<h1>Waves</h1>
-<li>
-  <% @waves.each do |wave| %>
-    <ul><%= link_to wave.display_range, wave %></ul>
+<h1 class="text-center">Current Wave</h1>
+<% if @current_wave.present? %>
+  <h4 class="text-center"><%= link_to @current_wave.display_range, @current_wave %></h4>
+<% end %>
+<% if @old_waves.present? %>
+  <h2 class="text-center pt-5">Old Waves</h2>
+  <% @old_waves.each do |wave| %>
+    <p class="text-center"><%= link_to wave.display_range, wave %></p>
   <% end %>
-</li>
+<% end %>

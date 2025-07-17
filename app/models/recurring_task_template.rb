@@ -100,6 +100,16 @@ class RecurringTaskTemplate < ApplicationRecord
     self.save!
   end
 
+  def activate!
+    self[:status] = "active"
+    self.save!
+  end
+
+  def deactivate!
+    self[:status] = "inactive"
+    self.save!
+  end
+
   private
 
   def task_create_hash(date)

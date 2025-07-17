@@ -1,57 +1,9 @@
 <h1 class="text-center"><%= @current_user.name %>'s Current Wave Dashboard</h1>
 
-<% if @unassigned.present? %>
-  <h1 class="text-center pt-5">Tasks Yet Unassigned</h1>
-  <p class="text-center pb-3">
-    <em><strong><%= @unassigned.count %></strong> Tasks</em>
-  </p>
-  <%= render "tasks/all", tasks: @unassigned %>
-<% end %>
-
-<% if @in_progress.present? %>
-  <h1 class="text-center pt-5">Your In Progress</h1>
-  <p class="text-center pb-3">
-    <em><strong><%= @in_progress.count %></strong> Tasks</em>
-  </p>
-  <%= render "tasks/all", tasks: @in_progress %>
-<% end %>
-
-<% if @today.present? %>
-  <h1 class="text-center pt-5">Your Unstarted and Due Today</h1>
-  <p class="text-center pb-3">
-    <em><strong><%= @today.count %></strong> Tasks</em>
-  </p>
-  <%= render "tasks/all", tasks: @today %>
-<% end %>
-
-<% if @tomorrow.present? %>
-  <h1 class="text-center pt-5">Your Unstarted and Due Tomorrow</h1>
-  <p class="text-center pb-3">
-    <em><strong><%= @today.count %></strong> Tasks</em>
-  </p>
-  <%= render "tasks/all", tasks: @tomorrow %>
-<% end %>
-
-<% if @other.present? %>
-  <h1 class="text-center pt-5">Your Other Remaining Tasks</h1>
-  <p class="text-center pb-3">
-    <em><strong><%= @other.count %></strong> Tasks</em>
-  </p>
-  <%= render "tasks/all", tasks: @other %>
-<% end %>
-
-<% if @completed.present? %>
-  <h1 class="text-center pt-5">Your Completed Tasks</h1>
-  <p class="text-center pb-3">
-    <em><strong><%= @completed.count %></strong> Tasks</em>
-  </p>
-  <%= render "tasks/all", tasks: @completed %>
-<% end %>
-
-<% if @dishonor.present? %>
-  <h1 class="text-center pt-5">Your Skipped and Failed Tasks</h1>
-  <p class="text-center pb-3">
-    <em><strong><%= @dishonor.count %></strong> Tasks</em>
-  </p>
-  <%= render "tasks/all", tasks: @dishonor %>
-<% end %>
+<%= render "tasks/counted_group", tasks: @unassigned, title: "Tasks Yet Unassigned" %>
+<%= render "tasks/counted_group", tasks: @in_progress, title: "Your In Progress" %>
+<%= render "tasks/counted_group", tasks: @today, title: "Your Unstarted Due Today" %>
+<%= render "tasks/counted_group", tasks: @tomorrow, title: "Your Unstarted Due Tomorrow" %>
+<%= render "tasks/counted_group", tasks: @other, title: "Your Other Remaining Tasks" %>
+<%= render "tasks/counted_group", tasks: @completed, title: "Your Completed Tasks" %>
+<%= render "tasks/counted_group", tasks: @dishonor, title: "Your Skipped and Failed Tasks" %>

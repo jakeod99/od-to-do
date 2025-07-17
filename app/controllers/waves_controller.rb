@@ -2,7 +2,7 @@ class WavesController < ApplicationController
   before_action :wave_commitment_redirect, only: [ :index, :new, :edit ]
 
   def index
-    @waves = Wave.all
+    @old_waves = Wave.completed.order(end_at: :desc)
   end
 
   def show

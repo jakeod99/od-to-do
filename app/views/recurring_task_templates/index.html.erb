@@ -1,1 +1,14 @@
-<%= render "tasks/all", tasks: @recurring_task_templates %>
+<h1 class="text-center">Recurring Task Templates</h1>
+<div class="row pb-3">
+  <div class="col text-center">
+    <%= link_to new_recurring_task_template_path, class: "btn btn-primary text-light btn-lg" do %>
+      <%= render "common/icon", icon: "plus-circle" %>
+      <strong>New Recurring Task Template</strong>
+    <% end %>
+  </div>
+</div>
+
+<%= render "tasks/counted_group", tasks: @daily, title: "Daily" %>
+<%= render "tasks/counted_group", tasks: @weekly, title: "Weekly" %>
+<%= render "tasks/counted_group", tasks: @monthly, title: "Monthly" %>
+<%= render "tasks/counted_group", tasks: @yearly, title: "Yearly" %>

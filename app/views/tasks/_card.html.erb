@@ -4,9 +4,11 @@
     "in_progress" => "primary",
     "completed" => "success",
     "skipped" => "warning",
-    "failed" => "danger"
+    "failed" => "danger",
+    "active" => "primary",
+    "inactive" => "secondary"
   }
-  status_color = status_color_map[task.status] unless is_recurring
+  status_color = status_color_map[task.status]
   first_badge_class = "bg-secondary"
   if status_color
     border_class = "border-#{status_color}"
@@ -32,8 +34,31 @@
       <div class="col-6">
         <%= render "common/badge", classes: "#{first_badge_class} mb-2", content: first_badge_content %>
       </div>
-      <% if task.editable? || task.skippable? || task.discardable? %>
+      <% if is_recurring || task.editable? || task.skippable? || task.discardable? %>
         <div class="col-6 text-end">
+          <% if is_recurring %>
+            <% if task.inactive? %>
+              <%=
+                link_to(
+                  recurring_task_template_activate_path(task.id),
+                  class: "btn btn-primary text-light py-0 px-1",
+                  data: { turbo_method: :post }
+                ) do
+              %>
+                <%= render "common/icon", icon: "lightning" %>
+              <% end %>
+            <% elsif task.active? %>
+              <%=
+                link_to(
+                  recurring_task_template_deactivate_path(task.id),
+                  class: "btn btn-secondary text-light py-0 px-1",
+                  data: { turbo_method: :post }
+                ) do
+              %>
+                <%= render "common/icon", icon: "pause-circle" %>
+              <% end %>
+            <% end %>
+          <% end %>
           <% if task.editable? %>
             <%=
               link_to(
@@ -82,13 +107,13 @@
     <% end %>
   </div>
   <ul class="list-group list-group-flush">
-    <% if !is_recurring && task.unfinished? %>
+    <% if is_recurring || task.unfinished? %>
       <li class="list-group-item <%= border_class %>">
         <p class="mb-0">
           <% if is_recurring %>
             <span class="fw-bolder">Days:</span>
             <%= task.display_days %>
-          <% else %>
+          <% elsif task.unfinished? %>
             <% if task.firm_due || task.suggested_due %>
               <% if task.firm_due %>
                 <span class="fw-bolder <%= "text-danger" unless task.completed? %>">Firm Due:</span>
@@ -125,32 +150,50 @@
         <%= render "common/intensity_badge", intensity: task.complexity_label %>
       </p>
     </li>
-    <li class="list-group-item <%= border_class %>">
-      <p class="mb-0">
-        <% if task.assigned_to %>
-          <span class="fw-bolder">Assigned To:</span>
-          <%= task.assigned_to.name %>
-        <% end %>
-        <% if !is_recurring && task.assignable? && task.assigned_to&.id != @current_user.id %>
-          <%= 
-            link_to(
-              task_assign_path(task.id, @current_user.id),
-              class: "btn btn-primary text-light py-0 px-1",
-              data: { turbo_method: :post }
-            ) do 
-          %>
-            <%= render "common/icon", icon: "person-plus" %>
-            Assign To Me!
+    <% if !is_recurring && !task.completed? %>
+      <li class="list-group-item <%= border_class %>">
+        <p class="mb-0">
+          <% if task.assigned_to %>
+            <span class="fw-bolder">Assigned To:</span>
+            <%= task.assigned_to.name %>
           <% end %>
-        <% end %>
-      </p>
-    </li>
+          <% if !is_recurring && task.assignable? %>
+            <% if task.assigned_to&.id == @current_user.id %>
+              <%= 
+                link_to(
+                  task_unassign_path(task.id),
+                  class: "btn btn-warning text-light py-0 px-1",
+                  data: { turbo_method: :post }
+                ) do 
+              %>
+                <%= render "common/icon", icon: "person-x" %>
+                Surrender
+              <% end %>
+            <% else %>
+              <%= 
+                link_to(
+                  task_assign_path(task.id, @current_user.id),
+                  class: "btn btn-primary text-light py-0 px-1",
+                  data: { turbo_method: :post }
+                ) do 
+              %>
+                <%= render "common/icon", icon: "person-plus" %>
+                Assign to Me
+              <% end %>
+            <% end %>
+          <% end %>
+        </p>
+      </li>
+    <% end %>
     <% if task.respond_to? :completed_by %>
       <li class="list-group-item <%= border_class %>">
         <p class="mb-0">
           <% if task.completed_by %>
             <span class="fw-bolder">Completed By:</span>
             <%= task.completed_by.name %>
+            <% if task.completed_at.present? %>
+              (on <%= task.completed_at.strftime("%-m/%-d/%y") %>)
+            <% end %>
           <% else %>
             <% if task.skipped? || task.failed? %>
               <small class="fst-italic">Task Will Not Be Completed</small>

@@ -84,6 +84,7 @@ production:
     database: od_to_do_production
     username: od_to_do
     password: <%= ENV["OD_TO_DO_DATABASE_PASSWORD"] %>
+    host: localhost
   cache:
     <<: *primary_production
     database: od_to_do_production_cache

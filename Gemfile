@@ -53,10 +53,10 @@ gem "redis", "~> 5.3.0"
 gem "hiredis-client", "~> 0.23.2"
 
 # explicitly adding net-* gems to solve Raspberry Pi hosting issue
-gem 'net-protocol'
-gem 'net-pop'
-gem 'net-smtp'
-gem 'net-imap'
+gem 'net-protocol', "~> 0.2.2"
+gem 'net-pop', "~> 0.1.2"
+gem 'net-smtp', "~> 0.5.0"
+gem 'net-imap', "~> 0.5.5"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

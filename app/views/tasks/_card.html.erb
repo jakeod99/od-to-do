@@ -150,7 +150,7 @@
         <%= render "common/intensity_badge", intensity: task.complexity_label %>
       </p>
     </li>
-    <% if !is_recurring && !task.completed? %>
+    <% if task.assigned_to && (is_recurring || !task.completed?) %>
       <li class="list-group-item <%= border_class %>">
         <p class="mb-0">
           <% if task.assigned_to %>

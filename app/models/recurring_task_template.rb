@@ -124,6 +124,7 @@ class RecurringTaskTemplate < ApplicationRecord
       due_key = is_firm ? :firm_due : :suggested_due
       hash[due_key] = date
       hash[:assign] = assigned_to if assigned_to
+      hash[:categories] = categories if categories
     end
   end
 

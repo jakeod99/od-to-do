@@ -13,8 +13,8 @@ class NewWaitingWaveCreator < ApplicationService
     begin
       ActiveRecord::Base.transaction do
         create_waiting_wave
-        add_all_tasks_due_in_range
-        create_all_relevant_recurring_tasks
+        add_existing_tasks
+        generate_recurring_tasks
       end
     rescue ActiveRecord::Rollback => e
       return failure message: "transaction block rollback '#{e.message}'"
@@ -52,6 +52,14 @@ class NewWaitingWaveCreator < ApplicationService
     )
   end
 
+  def add_tasks(tasks)
+    @waiting_wave.tasks << tasks
+  end
+
+  def rolling_tasks
+    Wave.previous&.tasks&.unfinished || []
+  end
+
   def tasks_due_in_range
     Task
       .unfinished
@@ -64,13 +72,17 @@ class NewWaitingWaveCreator < ApplicationService
       .distinct
   end
 
-  def add_all_tasks_due_in_range
-    @waiting_wave.tasks << tasks_due_in_range
+  def relevant_existing_tasks
+    (rolling_tasks + tasks_due_in_range).uniq
   end
 
-  def create_all_relevant_recurring_tasks # much room for performance optimization!
+  def add_existing_tasks
+    add_tasks relevant_existing_tasks
+  end
+
+  def generate_recurring_tasks # much room for performance optimization!
     RecurringTaskTemplate.active.each do |template|
-      @waiting_wave.tasks << template.create_tasks!(@start_date, @end_date)
+      add_tasks template.create_tasks!(@start_date, @end_date)
     end
   end
 end

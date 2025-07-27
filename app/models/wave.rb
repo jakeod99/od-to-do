@@ -26,7 +26,7 @@ class Wave < ApplicationRecord
   end
 
   def self.previous
-    where(status: "completed").order(:end_at).limit(1)
+    where(status: "completed").order(:end_at).limit(1)&.first
   end
 
   def complete!

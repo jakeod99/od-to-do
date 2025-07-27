@@ -18,6 +18,6 @@ class WaveTerminator < ApplicationService
   private
 
   def waves_to_terminate
-    Wave.where(status: "active", end_at: ..(Date.yesterday))
+    Wave.where(status: "active", end_at: ..(Date.today)) # waves are created with EoD timestamps
   end
 end
